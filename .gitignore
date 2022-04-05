@@ -1,3 +1,31 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@damepitech 
+khalidme93
+/
+IntelligentMobileSystemsTeam5
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+IntelligentMobileSystemsTeam5/.gitignore
+@khalidme93
+khalidme93 Initial commit
+Latest commit 1f31545 6 days ago
+ History
+ 1 contributor
+85 lines (68 sloc)  1.4 KB
+   
 # Built application files
 *.apk
 *.aar
@@ -83,3 +111,16 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
