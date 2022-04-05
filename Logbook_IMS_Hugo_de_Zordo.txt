@@ -1,0 +1,23 @@
+30/04:
+    - First meeting with the group at the beginning of the project.
+    - We divided in small groups the tasks and responsibilities on the project.
+    - Started using Git and Discord to communicate.
+    - A review of which components were obtained and how they could be used was done. A large
+    - The overall plan was discussed.
+    - Each group was tasked with taking ownership of their role (me the App)
+
+31/04:
+    - Low fidelity Figma model to have a first idea of the app
+    - Navgraph of the App
+
+01/04:
+    - Meeting with the group on the application
+    - Discuss the technology to be used
+    - Show the models on Figma
+    - Decide on the functionality
+    - Decide if we use sockets or if we communicate directly with the API
+
+05/04:
+    - More precise discussion of the tasks to be done
+    - Who should do what in the project
+    - Who should send information to who
