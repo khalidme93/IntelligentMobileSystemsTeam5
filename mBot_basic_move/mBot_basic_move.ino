@@ -58,6 +58,15 @@ void _delay(float seconds) {
   long endTime = millis() + seconds * 1000;
   while(millis() < endTime) _loop();
 }
+// Serial
+void sendSerial(int From){
+  
+  if(From==1){
+    Serial.print(1);
+    Serial.flush();
+  }
+
+}
 
 void setup() {
   rgbled_0.setpin(44);
@@ -69,10 +78,11 @@ void setup() {
   attachInterrupt(Encoder_1.getIntNum(), isr_process_encoder1, RISING);
   attachInterrupt(Encoder_2.getIntNum(), isr_process_encoder2, RISING);
   randomSeed((unsigned long)(lightsensor_12.read() * 123456));
+  Serial.begin(9600);
   _delay(1);
   while(1) {
 
-      rgbled_0.setColor(0,17,0,181);
+      rgbled_0.setColor(0,21,0,181);
       rgbled_0.show();
 
       move(1, 35 / 100.0 * 255);
@@ -151,14 +161,63 @@ void setup() {
             }
       }
       if(ultrasonic_10.distanceCm() < 20){
+          rgbled_0.setColor(0,255,0,0);
+          rgbled_0.show();
+          
+          sendSerial(1);
+          
+          Encoder_1.setTarPWM(0);
+          Encoder_2.setTarPWM(0);
+          _delay(4);
+          
           move(2, 30 / 100.0 * 255);
           _delay(1);
           move(2, 0);
           if(random(1, 10 +1) > 5){
+               rgbled_0.setColor(7,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(8,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(9,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(3,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(4,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(5,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(6,42,255,0);
+                    rgbled_0.show();
               move(4, 30 / 100.0 * 255);
               _delay(random(1, 2 +1));
               move(4, 0);
           }else{
+              rgbled_0.setColor(1,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(2,38,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(3,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(9,38,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(10,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(11,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(12,42,255,0);
+                    rgbled_0.show();
               move(3, 30 / 100.0 * 255);
               _delay(random(1, 2 +1));
               move(3, 0);
