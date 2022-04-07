@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 #include <MeAuriga.h>
+#include <time.h>
 
 MeRGBLed rgbled_0(0, 12);
 MeEncoderOnBoard Encoder_1(SLOT1);
@@ -10,6 +11,7 @@ MeLineFollower linefollower_9(9);
 MeUltrasonicSensor ultrasonic_10(10);
 MeLightSensor lightsensor_12(12);
 
+// PWM encoders 1 and 2 for motor 1 and 2
 void isr_process_encoder1(void)
 {
   if(digitalRead(Encoder_1.getPortB()) == 0){
@@ -26,6 +28,7 @@ void isr_process_encoder2(void)
     Encoder_2.pulsePosPlus();
   }
 }
+//Move function
 void move(int direction, int speed)
 {
   int leftSpeed = 0;
@@ -47,6 +50,7 @@ void move(int direction, int speed)
   Encoder_2.setTarPWM(rightSpeed);
 }
 
+// small delay
 void _delay(float seconds) {
   if(seconds < 0.0){
     seconds = 0.0;
@@ -72,75 +76,79 @@ void setup() {
       rgbled_0.show();
 
       move(1, 35 / 100.0 * 255);
+      // Line sensor not detecting 
       if((0?(0==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 0)==0):(0==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 0)==0))){
 
+          // Drives forward
           move(1, 35 / 100.0 * 255);
 
           rgbled_0.setColor(0,21,0,181);
           rgbled_0.show();
 
       }else{
-          if(((0?(2==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 2)==2):(2==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 2)==0)))  ||  ((0?(1==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 1)==1):(1==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 1)==0)))){
+          // If black line in detectes on left or right sensor
+          if(((0?(2==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 2)==2):(2==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 2)==0)))||((0?(1==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 1)==1):(1==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 1)==0)))){
 
               rgbled_0.setColor(0,255,0,0);
               rgbled_0.show();
-
-              move(2, 35 / 100.0 * 255);
-              _delay(random(1, 2 +1));
-              move(2, 0);
-              if(random(1, 10 +1) > 5){
-
-                  rgbled_0.setColor(7,50,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(8,42,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(9,42,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(3,50,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(4,42,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(5,42,255,0);
-                  rgbled_0.show();
-
-                  rgbled_0.setColor(6,42,255,0);
-                  rgbled_0.show();
-
-                  move(4, 30 / 100.0 * 255);
+              while(((0?(2==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 2)==2):(2==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 2)==0)))||((0?(1==0?linefollower_9.readSensors()==0:(linefollower_9.readSensors() & 1)==1):(1==0?linefollower_9.readSensors()==3:(linefollower_9.readSensors() & 1)==0)))){
+                move(2, 35 / 100.0 * 255);
                   _delay(random(1, 2 +1));
-                  move(4, 0);
-              }else{
-                  rgbled_0.setColor(1,42,255,0);
-                  rgbled_0.show();
+                  move(2, 0);
+                  if(random(1, 10 +1) > 5){
 
-                  rgbled_0.setColor(2,38,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(7,50,255,0);
+                    rgbled_0.show();
 
-                  rgbled_0.setColor(3,42,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(8,42,255,0);
+                    rgbled_0.show();
 
-                  rgbled_0.setColor(9,38,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(9,42,255,0);
+                    rgbled_0.show();
 
-                  rgbled_0.setColor(10,50,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(3,50,255,0);
+                    rgbled_0.show();
 
-                  rgbled_0.setColor(11,50,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(4,42,255,0);
+                    rgbled_0.show();
 
-                  rgbled_0.setColor(12,42,255,0);
-                  rgbled_0.show();
+                    rgbled_0.setColor(5,42,255,0);
+                    rgbled_0.show();
 
-                  move(3, 30 / 100.0 * 255);
-                  _delay(random(1, 2 +1));
-                  move(3, 0);
+                    rgbled_0.setColor(6,42,255,0);
+                    rgbled_0.show();
+
+                    move(4, 30 / 100.0 * 255);
+                    _delay(random(1, 2 +1));
+                    move(4, 0);
+                }else{
+                    rgbled_0.setColor(1,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(2,38,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(3,42,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(9,38,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(10,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(11,50,255,0);
+                    rgbled_0.show();
+
+                    rgbled_0.setColor(12,42,255,0);
+                    rgbled_0.show();
+
+                    move(3, 30 / 100.0 * 255);
+                    _delay(random(1, 2 +1));
+                    move(3, 0);
+                }
               }
-          }
+            }
       }
       if(ultrasonic_10.distanceCm() < 20){
           move(2, 30 / 100.0 * 255);
