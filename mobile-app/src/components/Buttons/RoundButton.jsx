@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     margin: 10,
     fontSize: 16,
     textAlign: 'center',
+    fontFamily: 'montserrat-semiBold',
   },
   icon: {
 
