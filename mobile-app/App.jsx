@@ -1,10 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Loading from './src/src/containers/Loading/Loading';
+import { StyleSheet } from 'react-native';
 
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
+import Navigation from './src/src/navigation/navigation';
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -40,7 +39,7 @@ export default function App() {
 
   return (
     <>
-      <Loading/>
+      <Navigation/>
     </>
   );
 }

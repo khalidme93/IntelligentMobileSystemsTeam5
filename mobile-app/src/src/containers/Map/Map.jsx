@@ -7,13 +7,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function Map() {
+export default function Map({ navigation }) {
   return (
     <View style={styles.container}>
       <Text>Map</Text>
       <Text>Map</Text>
       <Text>Map</Text>
-      <Button title={'dede'} onPress={() => navigation.navigate('Controller')}></Button>
+      <Button title={'dede'} onPress={() => navigation.navigate('Controller')}/>
     </View>
   );
 };
