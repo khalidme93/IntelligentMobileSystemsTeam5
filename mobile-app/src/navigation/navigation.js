@@ -1,5 +1,4 @@
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack';
 import Controller from '../containers/Controller/Controller';
 import React, { useMemo } from 'react';
 import Map from '../containers/Map/Map';
