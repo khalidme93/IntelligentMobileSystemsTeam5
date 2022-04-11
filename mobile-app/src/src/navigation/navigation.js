@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Controller from '../containers/Controller/Controller';
 import React, { useMemo } from 'react';
 import Map from '../containers/Map/Map';
-import App from '../../../App';
+import Loading from '../containers/Loading/Loading';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +22,11 @@ export default function Navigation() {
         <Stack.Screen
           name="Map"
           component={Map}
+          options={noop}
+        />
+        <Stack.Screen
+          name="Loading"
+          component={Loading}
           options={noop}
         />
       </Stack.Navigator>

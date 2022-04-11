@@ -13,7 +13,7 @@ export default function Controller({navigation}) {
       <Text>Controller</Text>
       <Text>Controller</Text>
       <Text>Controller</Text>
-      <Button title={'dede'} onPress={() => navigation.navigate('Map')}></Button>
+      <Button title={'dede'} onPress={() => navigation.navigate('Loading')}/>
     </View>
   );
 };

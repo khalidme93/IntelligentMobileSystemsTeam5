@@ -13,25 +13,23 @@ const styles = StyleSheet.create({
   },
   text: { //Change font
     fontSize: 24,
+    fontFamily: 'montserrat-regular',
+    color: colors.PRIMARY_DARK,
   },
 });
 
 
 
-export default function LargeButton({title, color}) {
-  const onPress = () => {
-    // TODO: Do navigation
-  }
-
-  var textColor = colors.SNOW;
-  if(color == colors.SNOW) {
+export default function LargeButton({title, color, onPress = () => null}) {
+  let textColor = colors.SNOW;
+  if(color === colors.SNOW) {
     textColor = colors.BLACK;
   }
 
   return (
     <View>
       <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]}>
-        <Text style={{ color: textColor }}>{title}</Text>
+        <Text style={[styles.text, { color: textColor }]}>{title}</Text>
       </TouchableOpacity>
     </View>
   );
