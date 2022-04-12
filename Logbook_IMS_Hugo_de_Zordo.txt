@@ -21,3 +21,19 @@
     - More precise discussion of the tasks to be done
     - Who should do what in the project
     - Who should send information to who
+
+07/04:
+    - Joined Github
+
+08/04:
+    - Meeting with the group
+    - pros and cons of the group + mostly good returnss
+    - Presentation of the mockups in figma
+    - Initialization of the react native project with expo
+    - Installation for the members of the group working on the App
+
+11/04:
+    - Starting components of the mobile app
+    - Navigation module
+    - First screen
+    - Wave header
