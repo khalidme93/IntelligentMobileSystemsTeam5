@@ -1,17 +1,17 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, View, Dimensions } from "react-native";
 import colors from '../../constants/colors';
 
 
 const styles = StyleSheet.create({
   button: {
-    width: 175,
+    width: Dimensions.get('window').width * 0.40,
     height: 50,
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: { //Change font
+  text: {
     fontSize: 24,
     fontFamily: 'montserrat-regular',
     color: colors.PRIMARY_DARK,
