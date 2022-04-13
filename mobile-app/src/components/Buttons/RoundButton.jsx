@@ -5,7 +5,7 @@ import {AntDesign, Ionicons} from '@expo/vector-icons'
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width * 0.23,
+    width: Dimensions.get('window').width * 0.27,
     height: Dimensions.get('window').width * 0.23,
   },
   button: {
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     elevation: 17,
   },
   textCenter: {
+    alignItems: 'center',
   },
   textStyle: {
     margin: 10,
@@ -44,7 +45,7 @@ export default function RoundButton({title, icon}) {
       <View style={styles.textCenter}>
       <TouchableOpacity>
         <View style={styles.button}>
-          <Ionicons name={icon} size='50%' color="black" />
+          <Ionicons name={icon} size={Dimensions.get('window').width * 0.23 * 0.65} color="black" />
         </View>
       </TouchableOpacity>
       <Text style={styles.textStyle}>{title}</Text>
