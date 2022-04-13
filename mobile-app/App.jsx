@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import Navigation from './src/navigation/navigation';
+import Controller from './src/containers/Controller/Controller';
 
 const fetchFonts = () => {
   return Font.loadAsync({
