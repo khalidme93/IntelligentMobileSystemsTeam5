@@ -6,7 +6,7 @@ import colors from '../../constants/colors';
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width * 0.85,
-    height: 30,
+    height: Dimensions.get('window').height * 0.12,
   },
   slider: {
     width: Dimensions.get('window').width * 0.85,
