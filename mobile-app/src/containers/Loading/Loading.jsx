@@ -1,31 +1,89 @@
-import React from 'react';
-import { View, StyleSheet, Text, StatusBar } from 'react-native';
-import COLORS from '../../constants/colors'
-import LargeButton from '../../components/Buttons/LargeButton';
+import React, { useEffect, useRef } from 'react';
+import { Animated, View, StyleSheet, Text } from 'react-native';
+import LottieView from 'lottie-react-native';
+import COLORS from '../../constants/colors';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  containerWrapper: {
+    position: 'absolute',
     backgroundColor: COLORS.PRIMARY_DARK,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '120%',
+  },
+  container: {
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 15
+    height: '100%',
+  },
+  loader: {
+    width: 1000,
+    height: 1000,
+    marginTop: -350,
+    marginBottom: -400,
   },
   text: {
     color: COLORS.SNOW,
-    marginBottom: 50,
     fontSize: 32,
     fontFamily: 'playfairDisplay-bold',
     textAlign: 'center',
   }
 });
 
-export default function Loading({navigation}) {
+const ANIMATION_DURATION = 500;
+
+const LoadingScreen = ({ loading }) => {
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const zIndexAnim = useRef(new Animated.Value(-10000)).current;
+  useEffect(() => {
+    if (loading) {
+      Animated.timing(
+        opacityAnim,
+        {
+          toValue: 1,
+          duration: ANIMATION_DURATION,
+          useNativeDriver: false,
+        }
+      ).start();
+      Animated.timing(
+        zIndexAnim,
+        {
+          toValue: 10000,
+          duration: 0,
+          useNativeDriver: false,
+        }
+      ).start();
+    } else {
+      Animated.timing(
+        opacityAnim,
+        {
+          toValue: 0,
+          duration: ANIMATION_DURATION,
+          useNativeDriver: false,
+        }
+      ).start();
+      Animated.timing(
+        zIndexAnim,
+        {
+          toValue: -10000,
+          delay: ANIMATION_DURATION,
+          duration: 0,
+          useNativeDriver: false,
+        }
+      ).start();
+    }
+  }, [loading]);
   return (
-    <View style={styles.container}>
-      <StatusBar hidden/>
-      <Text style={styles.text}>Intelligenta Mobila System</Text>
-      <LargeButton title={'Controller'} color={COLORS.SNOW} onPress={() => navigation.navigate('Controller')}/>
-    </View>
+    <Animated.View style={[styles.containerWrapper, { opacity: opacityAnim, zIndex: zIndexAnim }]}>
+      <View style={styles.container}>
+        <Text style={styles.text}>Intelligenta Mobila System</Text>
+        <View style={styles.loader}>
+          <LottieView source={require('./components/loadingAnimation.json')} autoPlay loop />
+        </View>
+      </View>
+    </Animated.View>
   );
 };
+export default LoadingScreen;

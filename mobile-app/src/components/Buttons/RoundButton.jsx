@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function RoundButton({title, icon}) {
+export default function RoundButton({title, icon, style}) {
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.textCenter}>
       <TouchableOpacity>
         <View style={styles.button}>
