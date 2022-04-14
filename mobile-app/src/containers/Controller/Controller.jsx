@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import NativeI18nManager from 'react-native/Libraries/ReactNative/NativeI18nManager';
 import LargeButton from '../../components/Buttons/LargeButton';
@@ -10,6 +10,7 @@ import SettingsButton from '../../components/Buttons/SettingsButton';
 import icons from '../../constants/icons';
 import AutoModeButton from '../../components/Buttons/AutoModeButton';
 import { getCurrentTimestamp } from 'react-native/Libraries/Utilities/createPerformanceLogger';
+import Loading from '../Loading/Loading';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Dimensions.get('window').width * 0.07,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: "center",
+    alignItems: 'center',
   },
   largeButtonContainer: {
     width: Dimensions.get('window').width,
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.93 * 0.45,
     marginTop: -10,
     paddingBottom: Dimensions.get('window').height * 0.03,
-    flexDirection: "column",
+    flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
@@ -52,60 +53,68 @@ const styles = StyleSheet.create({
   },
   leftRightContainer: {
     width: Dimensions.get('window').width,
-    flexDirection: "row",
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
   backwardContainer: {
     width: Dimensions.get('window').width,
   },
   text: {
-    fontFamily: "playfairDisplay-bold",
+    fontFamily: 'playfairDisplay-bold',
     color: colors.SNOW,
     fontSize: 32,
-    textAlignVertical: "center",
+    textAlignVertical: 'center',
     marginBottom: 5,
-  },  
-  speedSlider: {
-    
-  }
+  },
+  speedSlider: {}
 });
 
-export default function Controller({navigation}) {
+export default function Controller({ navigation }) {
+  const [splash, setSplash] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setSplash(false);
+    }, 1500);
+  }, []);
+
   return (
-    <Layout>
-      <View style={styles.container}>
-        <View >
-          <View style={styles.headerContainer}>
-            <Text style={styles.text}>Controller</Text>
-            <SettingsButton color={colors.SNOW} size={40} onPress={() => {alert("Settings")}}></SettingsButton>
-          </View>
-          <View style={styles.largeButtonContainer}>
+      <Layout>
+        <Loading loading={splash}/>
+        <View style={styles.container}>
+          <View>
+            <View style={styles.headerContainer}>
+              <Text style={styles.text}>Controller</Text>
+              <SettingsButton color={colors.SNOW} size={40} onPress={() => {
+                alert('Settings')
+              }}></SettingsButton>
+            </View>
+            <View style={styles.largeButtonContainer}>
               <LargeButton title="Controller" color={colors.PRIMARY}></LargeButton>
               <LargeButton title="Map" color={colors.SNOW} onPress={() => navigation.navigate('Map')}></LargeButton>
+            </View>
           </View>
-        </View>
-        <View style={styles.autoButtonContainer}>
-          <View><AutoModeButton icon="power"></AutoModeButton></View>
-          <View></View>
-        </View>
-        <View style={styles.controllerContainer}>
-          <View style={styles.forwardBackwardContainer}>
-            <RoundButton title="Forward" icon={icons.FORWARD.icon}></RoundButton>
-          </View>
-          <View></View>
-          <View style={styles.leftRightContainer}>
-            <RoundButton title="Left" icon={icons.LEFT.icon}></RoundButton>
+          <View style={styles.autoButtonContainer}>
+            <View><AutoModeButton icon="power"></AutoModeButton></View>
             <View></View>
+          </View>
+          <View style={styles.controllerContainer}>
+            <View style={styles.forwardBackwardContainer}>
+              <RoundButton title="Forward" icon={icons.FORWARD.icon}></RoundButton>
+            </View>
             <View></View>
-            <RoundButton title="Right" icon={icons.RIGHT.icon}></RoundButton>
+            <View style={styles.leftRightContainer}>
+              <RoundButton title="Left" icon={icons.LEFT.icon}></RoundButton>
+              <View></View>
+              <View></View>
+              <RoundButton title="Right" icon={icons.RIGHT.icon}></RoundButton>
+            </View>
+            <View></View>
+            <View style={styles.forwardBackwardContainer}>
+              <RoundButton title="Backward" icon={icons.BACKWARD.icon}></RoundButton>
+            </View>
           </View>
-          <View></View>
-          <View style={styles.forwardBackwardContainer}>
-            <RoundButton title="Backward" icon={icons.BACKWARD.icon}></RoundButton>
-          </View>
+          <SpeedSlider/>
         </View>
-        <SpeedSlider />
-      </View>
-    </Layout>
-  );
+      </Layout>
+    );
 };
