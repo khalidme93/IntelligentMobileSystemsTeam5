@@ -40,7 +40,7 @@ export default function Map({ navigation }) {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Map</Text>
-          <SettingsButton color={colors.SNOW} size={40} onPress={() => {alert("Settings")}}></SettingsButton>
+          <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings')}></SettingsButton>
         </View>
         <View style={styles.largeButtonContainer}>
           <LargeButton title="Controller" color={colors.SNOW} onPress={() => navigation.navigate('Controller')}></LargeButton>

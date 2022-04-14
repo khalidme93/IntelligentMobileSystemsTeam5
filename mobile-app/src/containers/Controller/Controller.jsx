@@ -86,9 +86,7 @@ export default function Controller({ navigation }) {
         <View>
           <View style={styles.headerContainer}>
             <Text style={styles.text}>Controller</Text>
-            <SettingsButton color={colors.SNOW} size={40} onPress={() => {
-              alert('Settings')
-            }}/>
+            <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings')}></SettingsButton>
           </View>
           <View style={styles.largeButtonContainer}>
             <LargeButton title="Controller" color={colors.PRIMARY}/>

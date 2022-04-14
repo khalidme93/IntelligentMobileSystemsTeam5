@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import Map from '../containers/Map/Map';
 import Loading from '../containers/Loading/Loading';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Settings from '../containers/Settings/Settings';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ export default function Navigation() {
         <Stack.Screen
           name="Loading"
           component={Loading}
+          options={noop}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
           options={noop}
         />
       </Stack.Navigator>
