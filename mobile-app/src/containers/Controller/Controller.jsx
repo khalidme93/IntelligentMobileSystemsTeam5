@@ -47,17 +47,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  forwardBackwardContainer: {
+  forwardContainer: {
     width: Dimensions.get('window').width,
+    marginBottom: 25,
+    alignItems: 'center',
+  },
+  backwardContainer: {
+    width: Dimensions.get('window').width,
+    marginTop: 25,
     alignItems: 'center',
   },
   leftRightContainer: {
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-  },
-  backwardContainer: {
-    width: Dimensions.get('window').width,
   },
   text: {
     fontFamily: 'playfairDisplay-bold',
@@ -66,7 +69,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     marginBottom: 5,
   },
-  speedSlider: {}
 });
 
 export default function Controller({ navigation }) {
@@ -78,43 +80,38 @@ export default function Controller({ navigation }) {
   }, []);
 
   return (
-      <Layout>
-        <Loading loading={splash}/>
-        <View style={styles.container}>
-          <View>
-            <View style={styles.headerContainer}>
-              <Text style={styles.text}>Controller</Text>
-              <SettingsButton color={colors.SNOW} size={40} onPress={() => {
-                alert('Settings')
-              }}></SettingsButton>
-            </View>
-            <View style={styles.largeButtonContainer}>
-              <LargeButton title="Controller" color={colors.PRIMARY}></LargeButton>
-              <LargeButton title="Map" color={colors.SNOW} onPress={() => navigation.navigate('Map')}></LargeButton>
-            </View>
+    <Layout>
+      <Loading loading={splash}/>
+      <View style={styles.container}>
+        <View>
+          <View style={styles.headerContainer}>
+            <Text style={styles.text}>Controller</Text>
+            <SettingsButton color={colors.SNOW} size={40} onPress={() => {
+              alert('Settings')
+            }}/>
           </View>
-          <View style={styles.autoButtonContainer}>
-            <View><AutoModeButton icon="power"></AutoModeButton></View>
-            <View></View>
+          <View style={styles.largeButtonContainer}>
+            <LargeButton title="Controller" color={colors.PRIMARY}/>
+            <LargeButton title="Map" color={colors.SNOW} onPress={() => navigation.navigate('Map')}/>
           </View>
-          <View style={styles.controllerContainer}>
-            <View style={styles.forwardBackwardContainer}>
-              <RoundButton title="Forward" icon={icons.FORWARD.icon}></RoundButton>
-            </View>
-            <View></View>
-            <View style={styles.leftRightContainer}>
-              <RoundButton title="Left" icon={icons.LEFT.icon}></RoundButton>
-              <View></View>
-              <View></View>
-              <RoundButton title="Right" icon={icons.RIGHT.icon}></RoundButton>
-            </View>
-            <View></View>
-            <View style={styles.forwardBackwardContainer}>
-              <RoundButton title="Backward" icon={icons.BACKWARD.icon}></RoundButton>
-            </View>
-          </View>
-          <SpeedSlider/>
         </View>
-      </Layout>
-    );
+        <View style={styles.autoButtonContainer}>
+          <AutoModeButton icon="power"/>
+        </View>
+        <View style={styles.controllerContainer}>
+          <View style={styles.forwardContainer}>
+            <RoundButton title="Forward" icon={icons.FORWARD.icon}/>
+          </View>
+          <View style={styles.leftRightContainer}>
+            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}}/>
+            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}}/>
+          </View>
+          <View style={styles.backwardContainer}>
+            <RoundButton title="Backward" icon={icons.BACKWARD.icon}/>
+          </View>
+        </View>
+        <SpeedSlider/>
+      </View>
+    </Layout>
+  );
 };
