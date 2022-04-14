@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.33,
         height: Dimensions.get('window').width * 0.34,
         alignItems: 'center',
+      zIndex: -1,
     },
     button: {
       borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,

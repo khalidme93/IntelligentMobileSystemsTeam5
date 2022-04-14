@@ -43,7 +43,7 @@ const LoadingScreen = ({ loading }) => {
         opacityAnim,
         {
           toValue: 1,
-          duration: ANIMATION_DURATION,
+          duration: 0,
           useNativeDriver: false,
         }
       ).start();
