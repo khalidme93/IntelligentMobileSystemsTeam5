@@ -11,23 +11,27 @@ from adafruit_rplidar import RPLidar
 PORT_NAME = '/dev/ttyUSB0'
 lidar = RPLidar(None, PORT_NAME, timeout=3)
 
-# used to scale data to fit on the screen
 max_distance = 0
 SCAN_BYTE = b'\x20'
 SCAN_TYPE = 129
-
+ 
+ #For now, this sets the points X, and Y.
 W = 100
 H = 100
+
+#Set Date in Y,M,D format
 def date_now():
     today = datetime.datetime.now().strftime("%Y-%m-%d")
     today = str(today)
     return(today)
-    
+
+#Set time in H,M,S format    
 def time_now():
     now = datetime.datetime.now().strftime("%H:%M:%S")
     now = str(now)
     return(now)
     
+#Processing Raw data to usable data
 def process_scan(raw):
     new_scan = bool(raw[0] & 0b1)
     inversed_new_scan = bool((raw[0] >> 1) & 0b1)
@@ -40,7 +44,8 @@ def process_scan(raw):
     angle = ((raw[1] >> 1) + (raw[2]  << 7)) / 64.
     distance = (raw[3] + (raw[4] << 8)) / 4.
     return new_scan, quality, angle, distance
-    
+
+#Checks for errors and buffer size limits
 def lidar_measurments(self, max_buf_meas=500):
     
     lidar.set_pwm(800)
@@ -65,6 +70,7 @@ def lidar_measurments(self, max_buf_meas=500):
                 self._serial_port.read(data_in_buf//dsize*dsize)
         yield _process_scan(raw)
 
+#Collecting data from lidar
 def lidar_scans(self, max_buf_meas=500, min_len=5):
     
     scan = []
@@ -76,7 +82,8 @@ def lidar_scans(self, max_buf_meas=500, min_len=5):
             scan = []
         if quality > 0 and distance > 0:
             scan.append((quality, angle, distance))
-    
+
+#Calculating points from data. Writing to CVS file and Cmd-window    
 def process_data(data):
     
     global max_distance
