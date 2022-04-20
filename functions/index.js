@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 const functions = require("firebase-functions");
 
@@ -6,9 +7,19 @@ const firebaseService = require("./permissions.json");
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseService),
 });
+
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
 const db = firebase.firestore();
+app.use(bodyParser.json());
+app.use(
+    express.urlencoded({
+      extended: true,
+    })
+);
+
 const cors = require("cors");
 app.use(cors({origin: true}));
 
@@ -17,16 +28,21 @@ app.get("/backendAPI", (req, res)=>{
 });
 
 app.post("/addData", (req, res)=>{
-  db.collection("maps").doc().collection("pathPoints").doc().set({
-    time: 2105,
-    x: "2",
-    y: "2",
+  const time = req.body.time;
+  const x = req.body.x;
+  const y = req.body.y;
+  console.log(time, x, y);
+
+  db.collection("maps").doc("test").collection("pathPoints").doc().set({
+    time: time,
+    x: x,
+    y: y,
   })
       .then(() => {
         return res.status(200).send("Document successfully written!");
       })
       .catch((error) => {
-        return res.status(200).send("Error writing document: ");
+        return res.status(200).send("Error writing document: ", error);
       });
 });
 
