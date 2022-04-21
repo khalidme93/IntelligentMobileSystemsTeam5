@@ -129,14 +129,14 @@ export default function Controller({ navigation }) {
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
-            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}/>
+            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease} disabled={automaticMode}/>
           </View>
           <View style={styles.leftRightContainer}>
-            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}} onPress={onPressLeft} onRelease={onRelease}/>
-            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}} onPress={onPressRight} onRelease={onRelease}/>
+            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}} onPress={onPressLeft} onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}} onPress={onPressRight} onRelease={onRelease} disabled={automaticMode}/>
           </View>
           <View style={styles.backwardContainer}>
-            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}/>
+            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease} disabled={automaticMode}/>
           </View>
         </View>
         <SpeedSlider/>
