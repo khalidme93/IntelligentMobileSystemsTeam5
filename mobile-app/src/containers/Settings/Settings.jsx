@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { View, StyleSheet, TextInput, Text, Dimensions, TouchableOpacity } from 'react-native';
 import colors from '../../constants/colors'
 import Layout from '../../components/Layout/Layout';
-import {Ionicons} from '@expo/vector-icons'
+import {Ionicons} from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
     container: {
         marginTop: 40,
         height: Dimensions.get('window').height * 0.93,
-        // justifyContent: 'space-between',
         alignItems: 'center',
     },
     headerContainer: {
@@ -23,27 +22,55 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
     },
-    text: {
+    content: {
+        marginTop: Dimensions.get('window').height * 0.18
+        
+    },
+    headerText: {
         fontFamily: "playfairDisplay-bold",
         color: colors.SNOW,
         fontSize: 32,
         textAlignVertical: "center",
         marginBottom: 5,
     },
+    text: {
+        fontFamily: "montserrat-bold",
+        color: 'black',
+        fontSize: 20,
+        textAlignVertical: "center",
+        marginBottom: 5,
+        marginTop: 20,
+    },
+    textInput: {
+        fontFamily: "montserrat-regular",
+        width: Dimensions.get('window').width * 0.8,
+        height: Dimensions.get('window').height * 0.07,
+        borderRadius: 12,
+        padding: 8,
+        borderWidth: 1,
+    },
+
 });
 
 export default function Settings({navigation}) {
+    // TODO: Add default IP as standard here
+
+    const [ip, setIp] = useState("192.168.1.1");
+    const [port, setPort] = useState('80');
+
   return (
     <Layout>
         <View style={styles.container}>
             <TouchableOpacity style={styles.headerContainer} onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back" size={Dimensions.get('window').width * 0.09} color={colors.SNOW}></Ionicons>
-                <Text style={styles.text}>Settings</Text>
+                <Text style={styles.headerText}>Settings</Text>
             </TouchableOpacity>
 
-            <View>
-                <Text>Backend-IP:</Text>
-                <TextInput></TextInput>
+            <View style={styles.content}>
+                <Text style={styles.text}>Backend-IP:</Text>
+                <TextInput style={styles.textInput} value={ip} onChangeText={setIp} onSubmitEditing={() => {}}></TextInput>
+                <Text style={styles.text}>Backend-Port:</Text>
+                <TextInput style={styles.textInput} value={port} onChangeText={setPort} onSubmitEditing={() => {}}></TextInput>
             </View>
         </View>
     </Layout>
