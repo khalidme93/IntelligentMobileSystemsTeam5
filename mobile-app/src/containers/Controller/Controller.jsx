@@ -86,8 +86,11 @@ export default function Controller({ navigation }) {
   }, []);
 
   const onPressAutomode = () => {
-    // TODO: if(automode off) Send startDrivingAutonomously-req to 
-    // else if(automode on) Send stopDrivingAutonomously-req to backend
+    if(!automaticMode) {
+      // TODO: Send startDrivingAutonomously-req to backend
+    } else if (automaticMode) {
+      // TODO: Send stopDrivingAutonomously-req to backend
+    }
   }
 
   const onPressForward = () => {
@@ -125,7 +128,10 @@ export default function Controller({ navigation }) {
           </View>
         </View>
         <View style={styles.autoButtonContainer}>
-          <AutoModeButton automatic={automaticMode} onPress={() => setAutomaticMode(!automaticMode)} />
+          <AutoModeButton automatic={automaticMode} onPress={() => {
+            setAutomaticMode(!automaticMode);
+            onPressAutomode();
+          }}/>
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
