@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
     }
   });
 
-const AutoModeButton = ({}) => {
+const AutoModeButton = ({onPress = () => null}) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.button}>
-                <TouchableOpacity disabled={true} style={styles.innerCircle}>
+                <TouchableOpacity disabled={true} style={styles.innerCircle} onPress={onPress}>
                     <Ionicons name="power" color={colors.SNOW} size={50} style={{marginLeft: 3}}></Ionicons>
                 </TouchableOpacity>
             </TouchableOpacity>

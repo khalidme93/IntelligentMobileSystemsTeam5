@@ -79,6 +79,31 @@ export default function Controller({ navigation }) {
     }, 1500);
   }, []);
 
+  const onPressAutomode = () => {
+    // TODO: if(automode off) Send startDrivingAutonomously-req to 
+    // else if(automode on) Send stopDrivingAutonomously-req to backend
+  }
+
+  const onPressForward = () => {
+    // TODO: Send startMovingForward-req to robot
+  }
+
+  const onPressLeft = () => {
+     // TODO: Send startTurningLeft-req to robot
+  }
+
+  const onPressRight = () => {
+     // TODO: Send startTurningRight-req to robot
+  }
+
+  const onPressBackward = () => {
+     // TODO: Send startMovingBackward-req to robot
+  }
+
+  const onRelease = () => {
+    // TODO: Send stopMoving-req to robot
+  }
+
   return (
     <Layout>
       <Loading loading={splash}/>
@@ -98,14 +123,14 @@ export default function Controller({ navigation }) {
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
-            <RoundButton title="Forward" icon={icons.FORWARD.icon}/>
+            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}/>
           </View>
           <View style={styles.leftRightContainer}>
-            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}}/>
-            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}}/>
+            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}} onPress={onPressLeft} onRelease={onRelease}/>
+            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}} onPress={onPressRight} onRelease={onRelease}/>
           </View>
           <View style={styles.backwardContainer}>
-            <RoundButton title="Backward" icon={icons.BACKWARD.icon}/>
+            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}/>
           </View>
         </View>
         <SpeedSlider/>

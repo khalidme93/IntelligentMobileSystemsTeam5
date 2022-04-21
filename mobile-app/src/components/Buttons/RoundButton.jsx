@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function RoundButton({title, icon, style}) {
+export default function RoundButton({title, icon, style, onPress = () => null, onRelease = () => null}) {
 
   return (
     <View style={[styles.container, style]}>
       <View style={styles.textCenter}>
-      <TouchableOpacity>
+      <TouchableOpacity onPressIn={onPress} onPressOut={onRelease}>
         <View style={styles.button}>
           <Ionicons name={icon} size={Dimensions.get('window').width * 0.23 * 0.65} color="black" />
         </View>
