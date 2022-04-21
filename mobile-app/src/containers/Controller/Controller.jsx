@@ -73,10 +73,16 @@ const styles = StyleSheet.create({
 
 export default function Controller({ navigation }) {
   const [splash, setSplash] = useState(true);
+  const [automaticMode, setAutomaticMode] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setSplash(false);
     }, 1500);
+  }, []);
+
+  useEffect(() => {
+    setAutomaticMode(false);
   }, []);
 
   return (
@@ -94,7 +100,7 @@ export default function Controller({ navigation }) {
           </View>
         </View>
         <View style={styles.autoButtonContainer}>
-          <AutoModeButton icon="power"/>
+          <AutoModeButton automatic={automaticMode} onPress={() => setAutomaticMode(!automaticMode)} />
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>

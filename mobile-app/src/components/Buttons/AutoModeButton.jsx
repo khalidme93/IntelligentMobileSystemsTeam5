@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
         borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
         width: Dimensions.get('window').width * 0.16,
         height: Dimensions.get('window').width * 0.16,
-        backgroundColor: colors.PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -41,15 +40,23 @@ const styles = StyleSheet.create({
     }
   });
 
-const AutoModeButton = ({}) => {
+const AutoModeButton = ({ automatic, onPress = () => null}) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button}>
-                <TouchableOpacity disabled={true} style={styles.innerCircle}>
-                    <Ionicons name="power" color={colors.SNOW} size={50} style={{marginLeft: 3}}></Ionicons>
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+                <TouchableOpacity disabled={true} style={[styles.innerCircle, automatic ? { backgroundColor: colors.RED } : { backgroundColor: colors.PRIMARY}]}>
+                  {automatic ?
+                    <Ionicons name="stop" color={colors.SNOW} size={50} style={{ marginLeft: 3 }}/>
+                  :
+                    <Ionicons name="power" color={colors.SNOW} size={50} style={{ marginLeft: 3 }}/>
+                  }
                 </TouchableOpacity>
             </TouchableOpacity>
-            <Text style={styles.text}>Autonomous Mode</Text>
+          {automatic ?
+            <Text style={styles.text}>Autonomous Mode: ON</Text>
+            :
+            <Text style={styles.text}>Autonomous Mode: OFF</Text>
+          }
         </View>
     );
 }
