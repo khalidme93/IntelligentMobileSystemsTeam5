@@ -52,25 +52,29 @@ const styles = StyleSheet.create({
 
 });
 
-export default function Settings({navigation}) {
+export default function Settings({navigation, route: { params }  }) {
     // TODO: Add default IP as standard here
-
-    const [ip, setIp] = useState("192.168.1.1");
-    const [port, setPort] = useState('80');
+    let { from, settings } = params
+    const [ip, setIp] = useState(settings.ip);
+    const [port, setPort] = useState(settings.port);
 
   return (
     <Layout>
         <View style={styles.container}>
-            <TouchableOpacity style={styles.headerContainer} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={Dimensions.get('window').width * 0.09} color={colors.SNOW}></Ionicons>
+            <TouchableOpacity style={styles.headerContainer} onPress={() => {
+                navigation.navigate(from, { from: "Settings", settings: { ip, port }});
+            }}>
+                <Ionicons name="arrow-back" size={Dimensions.get('window').width * 0.09} color={colors.SNOW}/>
                 <Text style={styles.headerText}>Settings</Text>
             </TouchableOpacity>
 
             <View style={styles.content}>
                 <Text style={styles.text}>Backend-IP:</Text>
-                <TextInput style={styles.textInput} value={ip} onChangeText={setIp} onSubmitEditing={() => {}}></TextInput>
+                <TextInput style={styles.textInput} value={ip} onChangeText={setIp} onSubmitEditing={() => {
+}}/>
                 <Text style={styles.text}>Backend-Port:</Text>
-                <TextInput style={styles.textInput} value={port} onChangeText={setPort} onSubmitEditing={() => {}}></TextInput>
+                <TextInput style={styles.textInput} value={port} onChangeText={setPort} onSubmitEditing={() => {
+}}/>
             </View>
         </View>
     </Layout>

@@ -9,7 +9,6 @@ import SpeedSlider from '../../components/SpeedSlider/SpeedSlider'
 import SettingsButton from '../../components/Buttons/SettingsButton';
 import icons from '../../constants/icons';
 import AutoModeButton from '../../components/Buttons/AutoModeButton';
-import { getCurrentTimestamp } from 'react-native/Libraries/Utilities/createPerformanceLogger';
 import Loading from '../Loading/Loading';
 
 const styles = StyleSheet.create({
@@ -71,9 +70,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Controller({ navigation }) {
+export default function Controller({ navigation, route }) {
   const [splash, setSplash] = useState(true);
   const [automaticMode, setAutomaticMode] = useState(false);
+  const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.1.1');
+  const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '80');
 
   useEffect(() => {
     setTimeout(() => {
@@ -86,11 +87,8 @@ export default function Controller({ navigation }) {
   }, []);
 
   const onPressAutomode = () => {
-    if(!automaticMode) {
-      // TODO: Send startDrivingAutonomously-req to backend
-    } else if (automaticMode) {
-      // TODO: Send stopDrivingAutonomously-req to backend
-    }
+    // TODO: if(automode off) Send startDrivingAutonomously-req to
+    // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
 
   const onPressForward = () => {
@@ -98,15 +96,15 @@ export default function Controller({ navigation }) {
   }
 
   const onPressLeft = () => {
-     // TODO: Send startTurningLeft-req to robot
+    // TODO: Send startTurningLeft-req to robot
   }
 
   const onPressRight = () => {
-     // TODO: Send startTurningRight-req to robot
+    // TODO: Send startTurningRight-req to robot
   }
 
   const onPressBackward = () => {
-     // TODO: Send startMovingBackward-req to robot
+    // TODO: Send startMovingBackward-req to robot
   }
 
   const onRelease = () => {
@@ -120,29 +118,52 @@ export default function Controller({ navigation }) {
         <View>
           <View style={styles.headerContainer}>
             <Text style={styles.text}>Controller</Text>
-            <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings')}></SettingsButton>
+            <SettingsButton
+              color={colors.SNOW}
+              size={40}
+              onPress={
+                () => navigation.navigate('Settings', {
+                  from: 'Controller',
+                  settings: {
+                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip ,
+                    port: typeof route.params !== 'undefined' ? route.params.settings.port : port
+                  }
+                })}/>
           </View>
           <View style={styles.largeButtonContainer}>
             <LargeButton title="Controller" color={colors.PRIMARY}/>
-            <LargeButton title="Map" color={colors.SNOW} onPress={() => navigation.navigate('Map')}/>
+            <LargeButton
+              title="Map"
+              color={colors.SNOW}
+              onPress={
+                () => navigation.navigate('Map', {
+                  from: 'Controller',
+                  settings: {
+                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip ,
+                    port: typeof route.params !== 'undefined' ? route.params.settings.port : port
+                  }
+                })
+              }
+            />
           </View>
         </View>
         <View style={styles.autoButtonContainer}>
-          <AutoModeButton automatic={automaticMode} onPress={() => {
-            setAutomaticMode(!automaticMode);
-            onPressAutomode();
-          }}/>
+          <AutoModeButton automatic={automaticMode} onPress={() => setAutomaticMode(!automaticMode)}/>
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
-            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}
+                         disabled={automaticMode}/>
           </View>
           <View style={styles.leftRightContainer}>
-            <RoundButton title="Left" icon={icons.LEFT.icon} style={{marginRight: 50}} onPress={onPressLeft} onRelease={onRelease} disabled={automaticMode}/>
-            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{marginLeft: 50}} onPress={onPressRight} onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton title="Left" icon={icons.LEFT.icon} style={{ marginRight: 50 }} onPress={onPressLeft}
+                         onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{ marginLeft: 50 }} onPress={onPressRight}
+                         onRelease={onRelease} disabled={automaticMode}/>
           </View>
           <View style={styles.backwardContainer}>
-            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}
+                         disabled={automaticMode}/>
           </View>
         </View>
         <SpeedSlider/>

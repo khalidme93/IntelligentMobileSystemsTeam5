@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Dimensions.get('window').width * 0.07,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: "center",
+    alignItems: 'center',
   },
   largeButtonContainer: {
     width: Dimensions.get('window').width,
@@ -26,25 +26,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
   text: {
-    fontFamily: "playfairDisplay-bold",
+    fontFamily: 'playfairDisplay-bold',
     color: colors.SNOW,
     fontSize: 32,
-    textAlignVertical: "center",
+    textAlignVertical: 'center',
     marginBottom: 5,
   },
 });
 
-export default function Map({ navigation }) {
+export default function Map({ navigation, route: { params } }) {
+  let { settings } = params
+
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Map</Text>
-          <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings')}></SettingsButton>
+          <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings', {
+            from: 'Map',
+            settings: settings
+          })}/>
         </View>
         <View style={styles.largeButtonContainer}>
-          <LargeButton title="Controller" color={colors.SNOW} onPress={() => navigation.navigate('Controller')}></LargeButton>
-          <LargeButton title="Map" color={colors.PRIMARY}></LargeButton>
+          <LargeButton title="Controller" color={colors.SNOW} onPress={() => navigation.navigate('Controller', {
+            from: 'Map',
+            settings: settings
+          })}/>
+          <LargeButton title="Map" color={colors.PRIMARY}/>
         </View>
       </View>
     </Layout>
