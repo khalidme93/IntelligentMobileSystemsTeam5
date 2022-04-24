@@ -23,11 +23,11 @@ app.use(
 const cors = require("cors");
 app.use(cors({origin: true}));
 
-app.get("/backendAPI", (req, res)=>{
+app.get("/backendAPI", (req, res) => {
   return res.status(200).send("hello bitches ");
 });
 
-app.post("/addData", (req, res)=>{
+app.post("/addData", (req, res) => {
   const time = req.body.time;
   const x = req.body.x;
   const y = req.body.y;
@@ -46,13 +46,13 @@ app.post("/addData", (req, res)=>{
       });
 });
 
-app.get("/getAllPoints", (req, res)=>{
-  const points=[];
+app.get("/getAllPoints", (req, res) => {
+  const points = [];
   const pathPoints = [];
   db.collection("maps").doc("test").collection("pathPoints").get().then((querySnapshot) => {
     querySnapshot.forEach((documentSnapshot) => {
-      const x= documentSnapshot.get("x");
-      const y=documentSnapshot.get("y");
+      const x = documentSnapshot.get("x");
+      const y = documentSnapshot.get("y");
       points.push({x: x, y: y});
     });
     pathPoints.push(points);
@@ -63,7 +63,7 @@ app.get("/getAllPoints", (req, res)=>{
       });
 });
 
-app.post("/createMap", (req, res)=>{
+app.post("/createMap", (req, res) => {
   db.collection("maps").doc().set({
 
   })
@@ -75,6 +75,6 @@ app.post("/createMap", (req, res)=>{
       });
 });
 
-exports.v1= functions.https.onRequest(app);
+exports.v1 = functions.https.onRequest(app);
 
 
