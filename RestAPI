@@ -1,0 +1,78 @@
+#from operator import truediv
+#from typing_extensions import Required
+
+from email import message
+from os import abort
+from flask import Flask, jsonify
+from flask_restful import Api, Resource, reqparse, fields, marshal_with
+from flask_sqlalchemy import SQLAlchemy, Model
+
+app = Flask(__name__)
+api = Api(app)
+app.config['SQLALCEMY_DATABASE_URI']= 'sqlite:///database.db'
+db = SQLAlchemy(app)
+
+class MowerAutonomosModel(db.Model):
+    MowerID =db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.Integer)
+    speed = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"mower(start={start}, speed={speed})"
+
+#Creat Database
+#db.create_all()
+
+resource_fields = {
+    'MowerID' : fields.Integer,
+    'start' : fields.Integer,
+    'speed' : fields.Integer
+}
+
+speed_put_args = reqparse.RequestParser()
+speed_put_args.add_argument("start", type=int, help="start of the mower is required", required=True)
+speed_put_args.add_argument("speed", type=int, help="speed of the mower is required", required=True)
+
+speed_update_args = reqparse.RequestParser()
+speed_update_args.add_argument("start", type=int)
+speed_update_args.add_argument("speed", type=int)
+
+#for AutonomosDriving
+class StartAutoDrive(Resource):
+    @marshal_with(resource_fields)
+    def get(self,  id):
+        mower = MowerAutonomosModel.query.filter_by(MowerID=id).first()
+        return mower
+
+    @marshal_with(resource_fields)
+    def put(self, id):
+        args = speed_put_args.parse_args()
+        putArgs = MowerAutonomosModel(MowerID=id, start=args['start'], speed=args['speed'])
+        db.session.add(putArgs)
+        return putArgs, 201
+
+    @marshal_with(resource_fields)
+    def patch(self, id):
+        args = speed_update_args.parse_args()
+        mower = MowerAutonomosModel.query.filter_by(MowerID=id).first()
+        if not mower:
+            abort(404,message="mower dosn't exist")
+
+        if args['speed']:
+            mower.speed = args['speed']
+        if args['start']:
+            mower.start = args['start']
+
+        db.session.commit()
+        
+        return mower
+api.add_resource(StartAutoDrive, "/StartAutoDrive/<int:id>")
+
+
+
+
+#for ManiualDriving
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
