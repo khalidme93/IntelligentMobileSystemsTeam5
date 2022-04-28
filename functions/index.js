@@ -39,11 +39,11 @@ const cors = require("cors");
 app.use(cors({origin: true}));
 
 
-app.get("/backendAPI", (req, res)=>{
+app.get("/backendAPI", (req, res) => {
   return res.status(200).send("hello bitches ");
 });
 
-app.post("/addData", (req, res)=>{
+app.post("/addData", (req, res) => {
   const time = req.body.time;
   const x = req.body.x;
   const y = req.body.y;
@@ -62,17 +62,35 @@ app.post("/addData", (req, res)=>{
       });
 });
 
-app.get("/readData", (req, res)=>{
-  db.collection("maps").doc("xvgM9e39jWUml02GxRXh").collection("pathPoints").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      return res.status(200).send(doc.data());
+app.get("/getAllPoints", (req, res) => {
+  const points = [];
+  const pathPoints = [];
+  db.collection("maps").doc("test").collection("pathPoints").get().then((querySnapshot) => {
+    querySnapshot.forEach((documentSnapshot) => {
+      const x = documentSnapshot.get("x");
+      const y = documentSnapshot.get("y");
+      points.push({x: x, y: y});
     });
+    pathPoints.push(points);
+    return res.status(200).send(pathPoints);
   })
       .catch((error) => {
         return res.status(200).send("Error reading document: ", error);
       });
 });
 
-exports.v1= functions.https.onRequest(app);
+app.post("/createMap", (req, res) => {
+  db.collection("maps").doc().set({
+
+  })
+      .then(() => {
+        return res.status(200).send("Document successfully written!");
+      })
+      .catch((error) => {
+        return res.status(200).send("Error writing document: ", error);
+      });
+});
+
+exports.v1 = functions.https.onRequest(app);
 
 
