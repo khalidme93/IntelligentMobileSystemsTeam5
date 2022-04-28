@@ -75,6 +75,7 @@ export default function Controller({ navigation, route }) {
   const [automaticMode, setAutomaticMode] = useState(false);
   const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.1.1');
   const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '80');
+  const [speed, setSpeed] = useState(50)
 
   useEffect(() => {
     setTimeout(() => {
@@ -92,23 +93,102 @@ export default function Controller({ navigation, route }) {
   }
 
   const onPressForward = () => {
-    // TODO: Send startMovingForward-req to robot
+    fetch('http://127.0.0.1:5000/Move', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed, 
+        direction: 'forward',
+      }),
+    }).then((response) => {
+      console.log(response.status)
+    }).catch((error) => {
+      console.log(error)
+    });
+    // TODO: Check that request works when possible
   }
 
   const onPressLeft = () => {
-    // TODO: Send startTurningLeft-req to robot
+    fetch('http://127.0.0.1:5000/Move', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed, 
+        direction: 'left',
+      }),
+    }).then((response) => {
+      console.log(response.status)
+    }).catch((error) => {
+      console.log(error)
+    });
+    // TODO: Check that request works when possible
   }
 
   const onPressRight = () => {
-    // TODO: Send startTurningRight-req to robot
+    fetch('http://127.0.0.1:5000/Move', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed, 
+        direction: 'right',
+      }),
+    }).then((response) => {
+      console.log(response.status)
+    }).catch((error) => {
+      console.log(error)
+    });
+    // TODO: Check that request works when possible
   }
 
   const onPressBackward = () => {
-    // TODO: Send startMovingBackward-req to robot
+    fetch('http://127.0.0.1:5000/Move', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed, 
+        direction: 'backward',
+      }),
+    }).then((response) => {
+      console.log(response.status)
+    }).catch((error) => {
+      console.log(error)
+    });
+    // TODO: Check that request works when possible
   }
 
   const onRelease = () => {
-    // TODO: Send stopMoving-req to robot
+    fetch('http://127.0.0.1:5000/StopMoving', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed, 
+        direction: 'backward',
+      }),
+    }).then((response) => {
+      console.log(response.status)
+    }).catch((error) => {
+      console.log(error)
+    });
+    // TODO: Check that request works when possible
+  }
+
+  const onSlidingComplete = (value) => {
+    setSpeed(Math.round(value))
   }
 
   return (
@@ -166,7 +246,7 @@ export default function Controller({ navigation, route }) {
                          disabled={automaticMode}/>
           </View>
         </View>
-        <SpeedSlider/>
+        <SpeedSlider onSlidingComplete={onSlidingComplete} value={speed}/>
       </View>
     </Layout>
   );
