@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Dimensions, ScrollView, SafeAreaView } from 'react-native';
 import LargeButton from '../../components/Buttons/LargeButton';
 import SettingsButton from '../../components/Buttons/SettingsButton';
+import MowerMap from '../../components/Map/MowerMap'
 import colors from '../../constants/colors';
-
 import Layout from '../../components/Layout/Layout';
 
 const styles = StyleSheet.create({
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     marginTop: 15,
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   text: {
     fontFamily: 'playfairDisplay-bold',
@@ -32,6 +32,16 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     marginBottom: 5,
   },
+  mapContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: Dimensions.get('window').height * 0.14,
+    backgroundColor: "green"
+  },
+  ground: {
+    backgroundColor: "blue",
+    color: "blue",
+  }
 });
 
 export default function Map({ navigation, route: { params } }) {
@@ -53,6 +63,13 @@ export default function Map({ navigation, route: { params } }) {
             settings: settings
           })}/>
           <LargeButton title="Map" color={colors.PRIMARY}/>
+        </View>
+        <View style={styles.mapContainer}>
+        <ScrollView>
+            <ScrollView horizontal>
+          <MowerMap style={styles.ground}/>
+            </ScrollView>
+        </ScrollView>
         </View>
       </View>
     </Layout>
