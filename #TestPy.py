@@ -1,8 +1,20 @@
 #TestPy
 import requests
 
-BASE = "http://127.0.0.1:5000/"
 
+print("iam here1111")
 
-response = requests.get(BASE + "StartAutoDrive/3")
-print(response.json())
+def addPoints(x:int, y:int, time:int):
+    print("iam here1")
+    url= "https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/addData"
+    payload= {"x":x, "y":y ,"time":time}
+    print(payload)
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    response = requests.post(url, headers=headers, data=payload)
+    print("Status Code", response.status_code)
+    print("JSON Response ", response.json())
+
+addPoints(1993,1993,1993)
+
