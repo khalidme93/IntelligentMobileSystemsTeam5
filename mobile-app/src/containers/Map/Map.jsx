@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: "green"
   },
   ground: {
-    backgroundColor: "blue",
+    backgroundColor: "green",
     color: "blue",
   }
 });

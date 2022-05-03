@@ -14,7 +14,7 @@ export default function MowerMap() {
         }
         function translateY(y){
             const intY = parseInt(y);
-            return (250+(intY));
+            return (250-(intY));
         }
         await fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
             .then((response) => response.json())
