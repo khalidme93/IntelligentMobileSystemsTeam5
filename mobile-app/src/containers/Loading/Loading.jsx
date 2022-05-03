@@ -29,12 +29,18 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'playfairDisplay-bold',
     textAlign: 'center',
+  },
+  loadingText: {
+    color: COLORS.SNOW,
+    fontSize: 20,
+    fontFamily: 'playfairDisplay-medium',
+    textAlign: 'center',
   }
 });
 
 const ANIMATION_DURATION = 500;
 
-const LoadingScreen = ({ loading }) => {
+const LoadingScreen = ({ loading, loadingText }) => {
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const zIndexAnim = useRef(new Animated.Value(-10000)).current;
   useEffect(() => {
@@ -82,6 +88,7 @@ const LoadingScreen = ({ loading }) => {
         <View style={styles.loader}>
           <LottieView source={require('./components/loadingAnimation.json')} autoPlay loop />
         </View>
+      <Text style={styles.loadingText}>{loadingText}</Text>
       </View>
     </Animated.View>
   );

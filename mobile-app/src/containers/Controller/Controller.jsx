@@ -73,15 +73,39 @@ const styles = StyleSheet.create({
 export default function Controller({ navigation, route }) {
   const [splash, setSplash] = useState(true);
   const [automaticMode, setAutomaticMode] = useState(false);
+  const [loadingText, setLoadingText] = useState("Establishing connection")
   const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.1.1');
   const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '80');
   const [speed, setSpeed] = useState(50)
+  // const [connection, setConnection] = useState(false)
 
   useEffect(() => {
+    // setLoadingText("Connecting to server")
+    // getMower((response, error) => {
+    //   if(response.status == 200) {
+    //     setSplash(false)
+    //     // Check whether mower is in automatic mode and set that state
+    //   } else {
+    //     setLoadingText("Connecting to mower")
+        
+    //     checkMowerConnection((response, error) => {
+    //       if (response.status == 200) {
+    //         setSplash(false)
+    //       } else {
+    //         setLoadingText("Could not connect to mower")
+    //         setTimeout(() => {
+    //           setConnection(!connection)
+    //         }, 3000);
+    //       }
+    //     })
+    //   }
+    // })
+      
+
     setTimeout(() => {
       setSplash(false);
     }, 1500);
-  }, []);
+  }, [/*connection*/]);
 
   useEffect(() => {
     setAutomaticMode(false);
@@ -92,7 +116,25 @@ export default function Controller({ navigation, route }) {
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
 
-  const onPressForward = () => {
+  const getMower = (callback) => {
+    fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/mower', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      callback(response, null)
+    }).catch((error) => {
+      callback([], error)
+    });
+  }
+
+  const checkMowerConnection = (callback) => {
+    stopMoving(callback);
+  }
+
+  const moveMower = (direction, callback) => {
     fetch('http://127.0.0.1:5000/Move', {
       method: 'POST',
       headers: {
@@ -101,89 +143,70 @@ export default function Controller({ navigation, route }) {
       },
       body: JSON.stringify({
         speed: speed, 
-        direction: 'forward',
+        direction: direction,
       }),
     }).then((response) => {
-      console.log(response.status)
+      callback(response, null);
     }).catch((error) => {
-      console.log(error)
+      callback([], error);
     });
-    // TODO: Check that request works when possible
   }
 
-  const onPressLeft = () => {
-    fetch('http://127.0.0.1:5000/Move', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        speed: speed, 
-        direction: 'left',
-      }),
-    }).then((response) => {
-      console.log(response.status)
-    }).catch((error) => {
-      console.log(error)
-    });
-    // TODO: Check that request works when possible
-  }
-
-  const onPressRight = () => {
-    fetch('http://127.0.0.1:5000/Move', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        speed: speed, 
-        direction: 'right',
-      }),
-    }).then((response) => {
-      console.log(response.status)
-    }).catch((error) => {
-      console.log(error)
-    });
-    // TODO: Check that request works when possible
-  }
-
-  const onPressBackward = () => {
-    fetch('http://127.0.0.1:5000/Move', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        speed: speed, 
-        direction: 'backward',
-      }),
-    }).then((response) => {
-      console.log(response.status)
-    }).catch((error) => {
-      console.log(error)
-    });
-    // TODO: Check that request works when possible
-  }
-
-  const onRelease = () => {
+  const stopMoving = (callback) => {
     fetch('http://127.0.0.1:5000/StopMoving', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        speed: speed, 
-        direction: 'backward',
-      }),
+      }
     }).then((response) => {
-      console.log(response.status)
+      callback(response, null);
     }).catch((error) => {
-      console.log(error)
+      callback([], error);
     });
+  }
+ 
+  const onPressForward = () => {
+    moveMower("forward", (response, error) => {
+      if(error) {
+        alert("An error occured, mower is probably not connected")
+      }
+    })
+    // TODO: Check that request works when possible
+  }
+  const onPressLeft = () => {
+    moveMower("left", (response, error) => {
+      if(error) {
+        alert("An error occured, mower is probably not connected")
+      }
+    })
+    // TODO: Check that request works when possible
+  }
+
+  const onPressRight = () => {
+    moveMower("right", (response, error) => {
+      if(error) {
+        alert("An error occured, mower is probably not connected")
+      }
+    })
+    // TODO: Check that request works when possible
+  }
+
+  const onPressBackward = () => {
+    moveMower("backward", (response, error) => {
+      if(error) {
+        alert("An error occured, mower is probably not connected")
+      }
+    })
+    // TODO: Check that request works when possible
+  }
+
+  const onRelease = () => {
+    stopMoving((response, error) => {
+      if(error) {
+        alert("An error occured, mower is probably not connected")
+      }
+    })
     // TODO: Check that request works when possible
   }
 
@@ -193,7 +216,7 @@ export default function Controller({ navigation, route }) {
 
   return (
     <Layout>
-      <Loading loading={splash}/>
+      <Loading loading={splash} loadingText={loadingText}/>
       <View style={styles.container}>
         <View>
           <View style={styles.headerContainer}>
