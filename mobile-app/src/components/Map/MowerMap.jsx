@@ -8,14 +8,22 @@ export default function MowerMap() {
     const [cols, setCols] = useState(null);
 
     useEffect(async () => {
+        function translateX(x){
+            const intX = parseInt(x);
+            return (250+(intX));
+        }
+        function translateY(y){
+            const intY = parseInt(y);
+            return (250+(intY));
+        }
         await fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
             .then((response) => response.json())
             .then((json) => {
                 let array = json[0].map((value) => {
-                    return `${value['x']},${value['y']}`
+                    return `${translateX(value['x'])},${translateY(value['y'])}`
                 });
                 let colsArray = json[0].map((value) => {
-                    return `${value['x']},${value['y']},${value['col']}`
+                    return `${translateX(value['x'])},${translateY(value['y'])},${value['col']}`
                 })
                 console.log(array);
                 setCols(colsArray)
@@ -43,7 +51,7 @@ export default function MowerMap() {
                 {cols && cols.map((value) => {
                     const [x, y, col] = value.split(',')
                     if(col=="1"){
-                        return <Circle cx={x} cy={y} r="6" fill="yellow" />
+                        return <Circle cx={x} cy={y} r="6" fill="red" />
                     }
                 })
                 }

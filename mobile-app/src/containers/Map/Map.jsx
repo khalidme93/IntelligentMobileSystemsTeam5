@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Text, Dimensions, ScrollView, SafeAreaView } from 'react-native';
+import { View, StyleSheet, Text, Dimensions, ScrollView, ImageBackground } from 'react-native';
 import LargeButton from '../../components/Buttons/LargeButton';
 import SettingsButton from '../../components/Buttons/SettingsButton';
 import MowerMap from '../../components/Map/MowerMap'
 import colors from '../../constants/colors';
 import Layout from '../../components/Layout/Layout';
+import grass from '../../assets/images/grass.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -65,9 +66,17 @@ export default function Map({ navigation, route: { params } }) {
           <LargeButton title="Map" color={colors.PRIMARY}/>
         </View>
         <View style={styles.mapContainer}>
-        <ScrollView>
-            <ScrollView horizontal>
-          <MowerMap style={styles.ground}/>
+        <ScrollView alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false} 
+        >
+            <ScrollView horizontal     
+            alwaysBounceHorizontal={false}
+            alwaysBounceVertical={false}
+            bounces={false}>
+              <ImageBackground source={grass} resizeMode="cover" style={styles.ground}>
+                <MowerMap style={styles.ground}/>
+              </ImageBackground>
             </ScrollView>
         </ScrollView>
         </View>
