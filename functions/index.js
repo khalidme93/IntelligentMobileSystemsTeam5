@@ -3,13 +3,21 @@
 const functions = require("firebase-functions");
 const firebase = require("firebase-admin");
 const firebaseService = require("./permissions.json");
+const firebaseConfig = require("./real-time-db.js");  
+
+
 
 const bucketName = "//intelligentmobilesystemsteam5.appspot.com";
 
-firebase.initializeApp({
+
+ firebase.initializeApp({
   credential: firebase.credential.cert(firebaseService),
   storageBucket: "intelligentmobilesystemsteam5.appspot.com",
 });
+
+
+
+
 
 const bucket = firebase.storage().bucket();
 
@@ -91,6 +99,24 @@ app.post("/createMap", (req, res) => {
       });
 });
 
-exports.v1 = functions.https.onRequest(app);
 
+
+app.post("/startAutoDriving", (req, res) => {
+  const isManual = req.body.isManual;
+  console.log(isManual);
+
+  db.collection("mower").doc('c4nxJEISKMyKVMUy7cIl').update({
+    isManual: isManual,
+  })
+      .then(() => {
+
+        return res.status(200).send("Document successfully written!");
+      })
+      .catch((error) => {
+        return res.status(200).send("Error writing document: ", error);
+      });
+});
+
+                    
+exports.v1 = functions.https.onRequest(app);
 
