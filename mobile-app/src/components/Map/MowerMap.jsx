@@ -6,33 +6,46 @@ import Svg, { Polyline, Circle } from 'react-native-svg'
 export default function MowerMap() {
     const [points, setPoints] = useState(null);
     const [cols, setCols] = useState(null);
-
+    
     useEffect(async () => {
-        function translateX(x){
-            const intX = parseInt(x);
-            return (250+(intX));
-        }
-        function translateY(y){
-            const intY = parseInt(y);
-            return (250-(intY));
-        }
-        await fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
-            .then((response) => response.json())
-            .then((json) => {
-                let array = json[0].map((value) => {
-                    return `${translateX(value['x'])},${translateY(value['y'])}`
-                });
-                let colsArray = json[0].map((value) => {
-                    return `${translateX(value['x'])},${translateY(value['y'])},${value['col']}`
-                })
-                console.log(array);
-                setCols(colsArray)
-                setPoints(array);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        await fetchAPI();
     }, []);
+    
+    useEffect(() => {
+        const interval = setInterval(() => {
+            console.log("update the map every second :)");
+            //await fetchAPI();
+        }, 1000)
+        return () => clearInterval(interval)
+    }, []);
+    
+    function translateX(x){
+        const intX = parseInt(x);
+        return (250+(intX));
+    }
+    function translateY(y){
+        const intY = parseInt(y);
+        return (250-(intY));
+    }
+
+    async function fetchAPI(){
+        fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
+        .then((response) => response.json())
+        .then((json) => {
+            let array = json[0].map((value) => {
+                return `${translateX(value['x'])},${translateY(value['y'])}`
+            });
+            let colsArray = json[0].map((value) => {
+                return `${translateX(value['x'])},${translateY(value['y'])},${value['col']}`
+            })
+            console.log(array);
+            setCols(colsArray)
+            setPoints(array);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+      }
 
 
     //var points = getPointsFromApi();
