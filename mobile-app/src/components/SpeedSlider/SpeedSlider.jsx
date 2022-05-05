@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 export default function SpeedSlider({onSlidingComplete, value}) {
   return (
     <View style={styles.container}>
-      <Slider maximumValue={100} minimumValue={0} value={value} onSlidingComplete={onSlidingComplete} minimumTrackTintColor={colors.GRAY} maximumTrackTintColor={colors.GRAY} thumbTintColor={colors.PRIMARY_DARK}/>
+      <Slider maximumValue={9} minimumValue={0} value={value} onSlidingComplete={onSlidingComplete} minimumTrackTintColor={colors.GRAY} maximumTrackTintColor={colors.GRAY} thumbTintColor={colors.PRIMARY_DARK}/>
       <Text style={styles.text}>Speed</Text>
     </View>
   );

@@ -72,11 +72,12 @@ const styles = StyleSheet.create({
 
 export default function Controller({ navigation, route }) {
   const [splash, setSplash] = useState(true);
-  const [automaticMode, setAutomaticMode] = useState(false);
+  const [automaticMode, setAutomaticMode] = useState(true);
   const [loadingText, setLoadingText] = useState("Establishing connection")
-  const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.1.1');
-  const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '80');
-  const [speed, setSpeed] = useState(50)
+  const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.43.8');
+  const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '5000');
+  const [speed, setSpeed] = useState(5)
+
   // const [connection, setConnection] = useState(false)
 
   useEffect(() => {
@@ -107,11 +108,22 @@ export default function Controller({ navigation, route }) {
     }, 1500);
   }, [/*connection*/]);
 
-  useEffect(() => {
-    setAutomaticMode(false);
-  }, []);
-
   const onPressAutomode = () => {
+    console.log(!automaticMode)
+    fetch('http://' + ip + ':' + port + '/AutoMode', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        active: !automaticMode
+      })
+    }).then((response) => {
+      callback(response, null);
+    }).catch((error) => {
+      callback([], error);
+    });
     // TODO: if(automode off) Send startDrivingAutonomously-req to
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
@@ -135,7 +147,7 @@ export default function Controller({ navigation, route }) {
   }
 
   const moveMower = (direction, callback) => {
-    fetch('http://127.0.0.1:5000/Move', {
+    fetch('http://' + ip + ':' + port + '/Move', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -153,7 +165,7 @@ export default function Controller({ navigation, route }) {
   }
 
   const stopMoving = (callback) => {
-    fetch('http://127.0.0.1:5000/StopMoving', {
+    fetch('http://' + ip + ':' + port + '/StopMoving', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -203,7 +215,7 @@ export default function Controller({ navigation, route }) {
 
   const onRelease = () => {
     stopMoving((response, error) => {
-      if(error) {
+      if (error) {
         alert("An error occured, mower is probably not connected")
       }
     })
@@ -251,7 +263,13 @@ export default function Controller({ navigation, route }) {
           </View>
         </View>
         <View style={styles.autoButtonContainer}>
-          <AutoModeButton automatic={automaticMode} onPress={() => setAutomaticMode(!automaticMode)}/>
+          <AutoModeButton automatic={automaticMode} onPress={() => {
+            setAutomaticMode(!automaticMode);
+            onPressAutomode((response, error) => {
+              console.log(response)
+              console.log(error)
+            });
+          }}/>
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>

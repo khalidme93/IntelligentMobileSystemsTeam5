@@ -69,7 +69,7 @@ export default function Settings({navigation, route: { params }  }) {
             </TouchableOpacity>
 
             <View style={styles.content}>
-                <Text style={styles.text}>Backend-IP:</Text>
+                <Text style={styles.text}>Robot-IP:</Text>
                 <TextInput style={styles.textInput} value={ip} onChangeText={setIp} onSubmitEditing={() => {
 }}/>
                 <Text style={styles.text}>Backend-Port:</Text>
