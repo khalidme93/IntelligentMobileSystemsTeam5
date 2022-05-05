@@ -17,10 +17,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">Mower application</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    A react native application used to control a remote mower robot.
     <br />
     <a href="https://github.com/khalidme93/IntelligentMobileSystemsTeam5/tree/frontend"><strong>Explore the docs »</strong></a>
     <br />
@@ -106,9 +106,9 @@ Install these prerequisites if you don't aldready have them.
   npm install npm@latest -g
   ```
 * expo
-```sh
-npm install --global expo-cli
-```
+  ```sh
+  npm install --global expo-cli
+  ```
 ### Installation
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
