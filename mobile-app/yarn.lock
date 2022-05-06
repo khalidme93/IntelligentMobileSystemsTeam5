@@ -11271,7 +11271,6 @@ watchpack@^1.6.1:
     neo-async "^2.5.0"
   optionalDependencies:
     chokidar "^3.4.0"
-    chokidar2 "file:./../../../AppData/Local/Yarn/Cache/v6/npm-watchpack-1.7.1-integrity/node_modules/watchpack/chokidar2"
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
