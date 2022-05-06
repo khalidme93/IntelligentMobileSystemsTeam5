@@ -10,6 +10,7 @@ import SettingsButton from '../../components/Buttons/SettingsButton';
 import icons from '../../constants/icons';
 import AutoModeButton from '../../components/Buttons/AutoModeButton';
 import Loading from '../Loading/Loading';
+import { TextInput } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -68,14 +69,23 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     marginBottom: 5,
   },
+  textInput: {
+    fontFamily: "montserrat-regular",
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').height * 0.07,
+    borderRadius: 12,
+    padding: 8,
+    borderWidth: 1,
+},
 });
 
 export default function Controller({ navigation, route }) {
+  // global.ip = "192.168.137.70"
   const [splash, setSplash] = useState(true);
   const [automaticMode, setAutomaticMode] = useState(true);
   const [loadingText, setLoadingText] = useState("Establishing connection")
-  const [ip] = useState( typeof route.params !== 'undefined' ? route.params.settings.ip : '192.168.43.8');
-  const [port] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '5000');
+  const [ip, setIp] = useState('192.168.137.70');
+  const [port, setPort] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '5000');
   const [speed, setSpeed] = useState(5)
 
   // const [connection, setConnection] = useState(false)
@@ -109,7 +119,7 @@ export default function Controller({ navigation, route }) {
   }, [/*connection*/]);
 
   const onPressAutomode = () => {
-    console.log(!automaticMode)
+    console.log('http://' + ip + ':' + port + '/AutoMode')
     fetch('http://' + ip + ':' + port + '/AutoMode', {
       method: 'POST',
       headers: {
@@ -120,10 +130,16 @@ export default function Controller({ navigation, route }) {
         active: !automaticMode
       })
     }).then((response) => {
-      callback(response, null);
+      console.log(response.status)
+      //callback(response, null);
     }).catch((error) => {
-      callback([], error);
+      alert("Error switching automode")
+      //callback([], error);
     });
+
+    if(!automaticMode == false) {
+      stopMoving((response, error) => {})
+    }
     // TODO: if(automode off) Send startDrivingAutonomously-req to
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
@@ -240,7 +256,7 @@ export default function Controller({ navigation, route }) {
                 () => navigation.navigate('Settings', {
                   from: 'Controller',
                   settings: {
-                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip ,
+                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip,
                     port: typeof route.params !== 'undefined' ? route.params.settings.port : port
                   }
                 })}/>
@@ -254,9 +270,9 @@ export default function Controller({ navigation, route }) {
                 () => navigation.navigate('Map', {
                   from: 'Controller',
                   settings: {
-                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip ,
+                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip,
                     port: typeof route.params !== 'undefined' ? route.params.settings.port : port
-                  }
+                  },
                 })
               }
             />
@@ -270,21 +286,22 @@ export default function Controller({ navigation, route }) {
               console.log(error)
             });
           }}/>
+          <TextInput style={styles.textInput} value={ip} onChangeText={setIp}></TextInput>
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
             <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}
-                         disabled={automaticMode}/>
+                        disabled={automaticMode}/>
           </View>
           <View style={styles.leftRightContainer}>
             <RoundButton title="Left" icon={icons.LEFT.icon} style={{ marginRight: 50 }} onPress={onPressLeft}
-                         onRelease={onRelease} disabled={automaticMode}/>
+                        onRelease={onRelease} disabled={automaticMode}/>
             <RoundButton title="Right" icon={icons.RIGHT.icon} style={{ marginLeft: 50 }} onPress={onPressRight}
-                         onRelease={onRelease} disabled={automaticMode}/>
+                        onRelease={onRelease} disabled={automaticMode}/>
           </View>
           <View style={styles.backwardContainer}>
             <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}
-                         disabled={automaticMode}/>
+                        disabled={automaticMode}/>
           </View>
         </View>
         <SpeedSlider onSlidingComplete={onSlidingComplete} value={speed}/>

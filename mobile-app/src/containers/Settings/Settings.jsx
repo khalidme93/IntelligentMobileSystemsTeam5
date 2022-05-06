@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 export default function Settings({navigation, route: { params }  }) {
     // TODO: Add default IP as standard here
     let { from, settings } = params
-    const [ip, setIp] = useState(settings.ip);
+    // const [ip, setIp] = useState(global.ip);
     const [port, setPort] = useState(settings.port);
 
   return (
@@ -70,8 +70,9 @@ export default function Settings({navigation, route: { params }  }) {
 
             <View style={styles.content}>
                 <Text style={styles.text}>Robot-IP:</Text>
-                <TextInput style={styles.textInput} value={ip} onChangeText={setIp} onSubmitEditing={() => {
-}}/>
+                <TextInput style={styles.textInput} value={global.ip} onSubmitEditing={({nativeEvent: { text }}) => {
+                    global.ip = text;
+                }}/>
                 <Text style={styles.text}>Backend-Port:</Text>
                 <TextInput style={styles.textInput} value={port} onChangeText={setPort} onSubmitEditing={() => {
 }}/>
