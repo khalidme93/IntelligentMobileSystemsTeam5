@@ -30,8 +30,7 @@
       "favicon": "./assets/favicon.png"
     },
     "androidNavigationBar": {
-      "visible": "sticky-immersive",
-      "favicon": "src/assets/image/mower.png"
+      "visible": "sticky-immersive"
     }
   }
 }
