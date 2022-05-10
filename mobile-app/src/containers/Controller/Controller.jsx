@@ -120,6 +120,9 @@ export default function Controller({ navigation, route }) {
 
   const onPressAutomode = () => {
     console.log('http://' + ip + ':' + port + '/AutoMode')
+    if(!automaticMode == false) {
+      stopMoving((response, error) => {})
+    }
     fetch('http://' + ip + ':' + port + '/AutoMode', {
       method: 'POST',
       headers: {
@@ -137,9 +140,6 @@ export default function Controller({ navigation, route }) {
       //callback([], error);
     });
 
-    if(!automaticMode == false) {
-      stopMoving((response, error) => {})
-    }
     // TODO: if(automode off) Send startDrivingAutonomously-req to
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
