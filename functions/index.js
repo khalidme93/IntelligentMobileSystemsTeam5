@@ -5,8 +5,7 @@ const firebase = require("firebase-admin");
 const firebaseService = require("./permissions.json");
 const firebaseConfig = require("./real-time-db.js");
 
-
-const bucketName = "//intelligentmobilesystemsteam5.appspot.com";
+const vision = require("@google-cloud/vision");
 
 
 firebase.initializeApp({
@@ -17,16 +16,6 @@ firebase.initializeApp({
 
 const bucket = firebase.storage().bucket();
 
-// Uploading images from the specified folder
-const imagePath = "./images/dog.jpg";
-
-bucket.upload(imagePath).then(() => {
-  console.log("Upload success");
-}).catch((err) => {
-  console.log("Error uploading to storage", err);
-});
-
-
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -36,7 +25,7 @@ app.use(bodyParser.json());
 app.use(
     express.urlencoded({
       extended: true,
-    })
+    }),
 );
 
 const cors = require("cors");
@@ -47,7 +36,31 @@ app.get("/backendAPI", (req, res) => {
   return res.status(200).send("hello bitches ");
 });
 
-app.post("/addData", (req, res) => {
+// // Can be done in hardware
+// app.get("/addImage", (req, res)=>{
+//   // Uploading images from the specified folder
+//   const imagePath = "./images/dog.jpg";
+
+//   bucket.upload(imagePath).then(() => {
+//     console.log("Upload success");
+//     return res.status(200).send("sucessss");
+//   }).catch((err) => {
+//     console.log("Error uploading to storage", err);
+//     return res.status(500).send("error", err);
+//   });
+// });
+
+
+app.get("/imageClass", async (req, res)=>{
+  const client = new vision.ImageAnnotatorClient();
+  const [result] = await client.labelDetection("./images/dog.jpg");
+  const labels = result.labelAnnotations;
+  console.log("Labels:");
+  labels.forEach((label) => console.log(label.description));
+  return res.status(200).send(labels.toString());
+});
+
+app.post("/addData", (req, res)=>{
   const time = req.body.time;
   const x = req.body.x;
   const y = req.body.y;
