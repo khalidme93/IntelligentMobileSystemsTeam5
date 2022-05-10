@@ -8,5 +8,13 @@
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1b25m%40intelligentmobilesystemsteam5.iam.gserviceaccount.com"
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1b25m%40intelligentmobilesystemsteam5.iam.gserviceaccount.com",
+  "apiKey": "AIzaSyCq1kRS37EtKEAaj8R7Z4pqKzCK67RsAJY",
+  "authDomain": "intelligentmobilesystemsteam5.firebaseapp.com",
+  "databaseURL":"https://intelligentmobilesystemsteam5-default-rtdb.europe-west1.firebasedatabase.app",
+  "projectId": "intelligentmobilesystemsteam5",
+  "storageBucket": "intelligentmobilesystemsteam5.appspot.com",
+  "messagingSenderId": "1047517056434",
+  " appId": "1:1047517056434:web:08ce4813881625211b28ab"
 }
+
