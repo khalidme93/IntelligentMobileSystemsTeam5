@@ -4,7 +4,6 @@ const functions = require("firebase-functions");
 const firebase = require("firebase-admin");
 const firebaseService = require("./permissions.json");
 const vision = require("@google-cloud/vision");
-const imgClass = require("./image-classification");
 
 
 firebase.initializeApp({
