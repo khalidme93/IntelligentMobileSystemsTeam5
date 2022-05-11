@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import NativeI18nManager from 'react-native/Libraries/ReactNative/NativeI18nManager';
 import LargeButton from '../../components/Buttons/LargeButton';
 import RoundButton from '../../components/Buttons/RoundButton';
 import colors from '../../constants/colors';
@@ -10,13 +9,12 @@ import SettingsButton from '../../components/Buttons/SettingsButton';
 import icons from '../../constants/icons';
 import AutoModeButton from '../../components/Buttons/AutoModeButton';
 import Loading from '../Loading/Loading';
-import { TextInput } from 'react-native-gesture-handler';
+import { useAppContext } from '../../hooks/useAppContext';
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     height: Dimensions.get('window').height * 0.93,
-    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   headerContainer: {
@@ -36,7 +34,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: Dimensions.get('window').height * 0.08,
+    marginTop: Dimensions.get('window').height * 0.12,
   },
   controllerContainer: {
     width: Dimensions.get('window').width,
@@ -70,23 +68,21 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   textInput: {
-    fontFamily: "montserrat-regular",
+    fontFamily: 'montserrat-regular',
     width: Dimensions.get('window').width * 0.8,
     height: Dimensions.get('window').height * 0.07,
     borderRadius: 12,
     padding: 8,
     borderWidth: 1,
-},
+  },
 });
 
-export default function Controller({ navigation, route }) {
-  // global.ip = "192.168.137.70"
+export default function Controller({ navigation }) {
   const [splash, setSplash] = useState(true);
   const [automaticMode, setAutomaticMode] = useState(true);
-  const [loadingText, setLoadingText] = useState("Establishing connection")
-  const [ip, setIp] = useState('192.168.137.70');
-  const [port, setPort] = useState(typeof route.params !== 'undefined' ? route.params.settings.port : '5000');
-  const [speed, setSpeed] = useState(5)
+  const [loadingText, setLoadingText] = useState('Establishing connection')
+  const { ip, port } = useAppContext();
+  const [speed, setSpeed] = useState(5);
 
   // const [connection, setConnection] = useState(false)
 
@@ -98,7 +94,7 @@ export default function Controller({ navigation, route }) {
     //     // Check whether mower is in automatic mode and set that state
     //   } else {
     //     setLoadingText("Connecting to mower")
-        
+
     //     checkMowerConnection((response, error) => {
     //       if (response.status == 200) {
     //         setSplash(false)
@@ -111,7 +107,7 @@ export default function Controller({ navigation, route }) {
     //     })
     //   }
     // })
-      
+
 
     setTimeout(() => {
       setSplash(false);
@@ -119,9 +115,11 @@ export default function Controller({ navigation, route }) {
   }, [/*connection*/]);
 
   const onPressAutomode = () => {
+    setAutomaticMode(!automaticMode);
     console.log('http://' + ip + ':' + port + '/AutoMode')
-    if(!automaticMode == false) {
-      stopMoving((response, error) => {})
+    if (!automaticMode === false) {
+      stopMoving((response, error) => {
+      })
     }
     fetch('http://' + ip + ':' + port + '/AutoMode', {
       method: 'POST',
@@ -136,7 +134,7 @@ export default function Controller({ navigation, route }) {
       console.log(response.status)
       //callback(response, null);
     }).catch((error) => {
-      alert("Error switching automode")
+      alert('Error switching automode')
       //callback([], error);
     });
 
@@ -170,7 +168,7 @@ export default function Controller({ navigation, route }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        speed: speed, 
+        speed: speed,
         direction: direction,
       }),
     }).then((response) => {
@@ -193,37 +191,37 @@ export default function Controller({ navigation, route }) {
       callback([], error);
     });
   }
- 
+
   const onPressForward = () => {
-    moveMower("forward", (response, error) => {
-      if(error) {
-        alert("An error occured, mower is probably not connected")
+    moveMower('left', (response, error) => {
+      if (error) {
+        alert('An error occured, mower is probably not connected')
       }
     })
     // TODO: Check that request works when possible
   }
   const onPressLeft = () => {
-    moveMower("left", (response, error) => {
-      if(error) {
-        alert("An error occured, mower is probably not connected")
+    moveMower('left', (response, error) => {
+      if (error) {
+        alert('An error occured, mower is probably not connected')
       }
     })
     // TODO: Check that request works when possible
   }
 
   const onPressRight = () => {
-    moveMower("right", (response, error) => {
-      if(error) {
-        alert("An error occured, mower is probably not connected")
+    moveMower('right', (response, error) => {
+      if (error) {
+        alert('An error occured, mower is probably not connected')
       }
     })
     // TODO: Check that request works when possible
   }
 
   const onPressBackward = () => {
-    moveMower("backward", (response, error) => {
-      if(error) {
-        alert("An error occured, mower is probably not connected")
+    moveMower('backward', (response, error) => {
+      if (error) {
+        alert('An error occured, mower is probably not connected')
       }
     })
     // TODO: Check that request works when possible
@@ -232,7 +230,7 @@ export default function Controller({ navigation, route }) {
   const onRelease = () => {
     stopMoving((response, error) => {
       if (error) {
-        alert("An error occured, mower is probably not connected")
+        alert('An error occured, mower is probably not connected')
       }
     })
     // TODO: Check that request works when possible
@@ -252,59 +250,63 @@ export default function Controller({ navigation, route }) {
             <SettingsButton
               color={colors.SNOW}
               size={40}
-              onPress={
-                () => navigation.navigate('Settings', {
-                  from: 'Controller',
-                  settings: {
-                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip,
-                    port: typeof route.params !== 'undefined' ? route.params.settings.port : port
-                  }
-                })}/>
+              onPress={() => navigation.navigate('Settings')}
+            />
           </View>
           <View style={styles.largeButtonContainer}>
             <LargeButton title="Controller" color={colors.PRIMARY}/>
             <LargeButton
               title="Map"
               color={colors.SNOW}
-              onPress={
-                () => navigation.navigate('Map', {
-                  from: 'Controller',
-                  settings: {
-                    ip: typeof route.params !== 'undefined' ? route.params.settings.ip : ip,
-                    port: typeof route.params !== 'undefined' ? route.params.settings.port : port
-                  },
-                })
-              }
+              onPress={() => navigation.navigate('Map')}
             />
-          </View>
+          < /View>
         </View>
         <View style={styles.autoButtonContainer}>
           <AutoModeButton automatic={automaticMode} onPress={() => {
-            setAutomaticMode(!automaticMode);
             onPressAutomode((response, error) => {
               console.log(response)
               console.log(error)
             });
           }}/>
-          <TextInput style={styles.textInput} value={ip} onChangeText={setIp}></TextInput>
         </View>
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
-            <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}
-                        disabled={automaticMode}/>
+            <RoundButton
+              title="Forward"
+              icon={icons.FORWARD.icon}
+              onPress={onPressForward}
+              onRelease={onRelease}
+              disabled={automaticMode}/>
           </View>
           <View style={styles.leftRightContainer}>
-            <RoundButton title="Left" icon={icons.LEFT.icon} style={{ marginRight: 50 }} onPress={onPressLeft}
-                        onRelease={onRelease} disabled={automaticMode}/>
-            <RoundButton title="Right" icon={icons.RIGHT.icon} style={{ marginLeft: 50 }} onPress={onPressRight}
-                        onRelease={onRelease} disabled={automaticMode}/>
+            <RoundButton
+              title="Left"
+              icon={icons.LEFT.icon}
+              style={{ marginRight: 50 }}
+              onPress={onPressLeft}
+              onRelease={onRelease}
+              disabled={automaticMode}/>
+            <RoundButton
+              title="Right"
+              icon={icons.RIGHT.icon}
+              style={{ marginLeft: 50 }}
+              onPress={onPressRight}
+              onRelease={onRelease}
+              disabled={automaticMode}/>
           </View>
           <View style={styles.backwardContainer}>
-            <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}
-                        disabled={automaticMode}/>
+            <RoundButton
+              title="Backward"
+              icon={icons.BACKWARD.icon}
+              onPress={onPressBackward}
+              onRelease={onRelease}
+              disabled={automaticMode}/>
           </View>
         </View>
-        <SpeedSlider onSlidingComplete={onSlidingComplete} value={speed}/>
+        <View style={{ marginTop: 25 }}>
+          <SpeedSlider onSlidingComplete={onSlidingComplete} value={speed}/>
+        </View>
       </View>
     </Layout>
   );

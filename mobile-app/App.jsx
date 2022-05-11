@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 import * as Font from 'expo-font';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import Navigation from './src/navigation/navigation';
+import { AppContext } from './src/hooks/useAppContext';
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -26,6 +27,12 @@ const fetchFonts = () => {
 
 export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [ip, setIp] = useState('192.168.137.70');
+  const [port, setPort] = useState('5000');
+
+  const value = useMemo(() => ({
+    ip, setIp, port, setPort
+  }), [ip, port]);
 
   if (!dataLoaded) {
     return (
@@ -38,9 +45,9 @@ export default function App() {
   }
 
   return (
-    <>
+    <AppContext.Provider value={value}>
       <Navigation/>
-    </>
+    </AppContext.Provider>
   );
 }
 
