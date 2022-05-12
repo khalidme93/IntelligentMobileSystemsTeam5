@@ -4,9 +4,9 @@ import { useAppContext } from './useAppContext';
 export const useApi = () => {
   const { ip, port } = useAppContext();
 
-  const request = async (method, url, config) => {
+  const request =  (method, url, config) => {
     try {
-      const response = await fetch(`http://${ip}:${port}/${url}`, {
+      return fetch(`http://${ip}:${port}/${url}`, {
         method: method,
         headers: {
           Accept: 'application/json',
@@ -14,7 +14,6 @@ export const useApi = () => {
         },
         ...config
       });
-      return response.data;
     } catch (e) {
       if (!e.response) {
         throw {
