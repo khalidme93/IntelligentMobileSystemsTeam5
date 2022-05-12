@@ -4,16 +4,16 @@ import { useAppContext } from './useAppContext';
 export const useApi = () => {
   const { ip, port } = useAppContext();
 
-  const request =  (method, url, config) => {
+  const request = async (method, url, config) => {
     try {
-      return fetch(`http://${ip}:${port}/${url}`, {
+      return await fetch(`http://${ip}:${port}/${url}`, {
         method: method,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         ...config
-      });
+      }).then(res => res.json());
     } catch (e) {
       if (!e.response) {
         throw {

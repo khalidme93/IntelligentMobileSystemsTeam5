@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import LargeButton from '../../components/Buttons/LargeButton';
 import RoundButton from '../../components/Buttons/RoundButton';
 import colors from '../../constants/colors';
@@ -90,99 +90,55 @@ export default function Controller({ navigation }) {
   useEffect(() => {
     const delay = automaticMode ? 5000 : 10000;
     const interval = setInterval(async () => {
-        console.log("update mower status every 5 seconds");
-        await checkMowerStatus();
+      console.log('update mower status every 5 seconds');
+      await mowerStatus();
     }, delay)
     return () => clearInterval(interval)
   }, []);
 
   const onPressAutomode = async () => {
-    !automaticMode === false ?? await stopMower();
-
-    setAutomaticMode(!automaticMode);
-    console.log('http://' + ip + ':' + port + '/AutoMode')
-    fetch('http://' + ip + ':' + port + '/AutoMode', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        active: !automaticMode
-      })
-    }).then((response) => {
-      console.log(response.status)
-      //callback(response, null);
-    }).catch((error) => {
-      alert('Error switching automode')
-      //callback([], error);
-    });
+    !automaticMode === false ? await stopMower() : null;
+    try {
+      const response = await request('POST', 'AutoMode', { body: JSON.stringify({ active: !automaticMode }) });
+      const res = await mowerStatus();
+      console.log(res)
+      setAutomaticMode(res.mode === 1)
+    } catch (e) {
+      console.error(e);
+    }
   }
 
-  const getMower = (callback) => {
-    fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/mower', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => {
-      callback(response, null)
-    }).catch((error) => {
-      callback([], error)
-    });
-  }
+  // const getMower = (callback) => {
+  //   fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/mower', {
+  //     method: 'GET',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     }
+  //   }).then((response) => {
+  //     callback(response, null)
+  //   }).catch((error) => {
+  //     callback([], error)
+  //   });
+  // }
 
-  const checkMowerStatus = async (callback) => {
-    await fetch('http://' + ip + ':' + port + '/GetStatus')
-    .then(response => {
-      if(response.status == 200) {
-        setConnectionFailed(false)
-        splash ? setSplash(false) : null;
-        response.json().then(body => {
-          if(body) {
-            setAutomaticMode(true);
-          } else {
-            setAutomaticMode(false);
-          }
-          console.log(body.mode);
-        });
+  const mowerStatus = async () => {
+    try {
+      const response = await request('GET', 'GetStatus');
+      setConnectionFailed(false)
+      splash ? setSplash(false) : null;
+      if (response.mode === 1) {
+        setAutomaticMode(true);
       } else {
-        setSplash(true);
+        setAutomaticMode(false);
       }
-    })
-    .catch(error => {
+      return response;
+    } catch (e) {
+      console.error(e);
       setSplash(true);
       setConnectionFailed(true);
-      setLoadingText("Connecting to mower")
-    })
-  }
-
-  const moveMower = (direction, callback) => {
-    fetch('http://' + ip + ':' + port + '/Move', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        direction: direction,
-        speed: speed
-      })
-  }
-
-  const stopMoving = async (callback) => {
-    fetch('http://' + ip + ':' + port + '/StopMoving', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => {
-      callback(response, null);
-    }).catch((error) => {
-      callback([], error);
-    });
+      setLoadingText('Connecting to mower')
+    }
   }
 
   const stopMower = async () => {
