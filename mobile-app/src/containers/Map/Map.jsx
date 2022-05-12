@@ -37,48 +37,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: Dimensions.get('window').height * 0.14,
-    backgroundColor: "green"
+    backgroundColor: 'green'
   },
   ground: {
-    backgroundColor: "green",
-    color: "blue",
+    backgroundColor: 'green',
+    color: 'blue',
   }
 });
 
-export default function Map({ navigation, route: { params } }) {
-  let { settings } = params
+export default function Map({ navigation }) {
 
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Map</Text>
-          <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings', {
-            from: 'Map',
-            settings: settings
-          })}/>
+          <SettingsButton color={colors.SNOW} size={40} onPress={() => navigation.navigate('Settings')}/>
         </View>
         <View style={styles.largeButtonContainer}>
-          <LargeButton title="Controller" color={colors.SNOW} onPress={() => navigation.navigate('Controller', {
-            from: 'Map',
-            settings: settings
-          })}/>
+          <LargeButton title="Controller" color={colors.SNOW} onPress={() => navigation.navigate('Controller')}/>
           <LargeButton title="Map" color={colors.PRIMARY}/>
         </View>
         <View style={styles.mapContainer}>
-        <ScrollView alwaysBounceHorizontal={false}
-        alwaysBounceVertical={false}
-        bounces={false} 
-        >
-            <ScrollView horizontal     
+          <ScrollView
             alwaysBounceHorizontal={false}
             alwaysBounceVertical={false}
             bounces={false}>
-              <ImageBackground source={grass} resizeMode="cover" style={styles.ground}>
+            <ScrollView
+              horizontal
+              alwaysBounceHorizontal={false}
+              alwaysBounceVertical={false}
+              bounces={false}>
+              <ImageBackground
+                source={grass}
+                resizeMode="cover"
+                style={styles.ground}>
                 <MowerMap style={styles.ground}/>
               </ImageBackground>
             </ScrollView>
-        </ScrollView>
+          </ScrollView>
         </View>
       </View>
     </Layout>
