@@ -80,39 +80,10 @@ const styles = StyleSheet.create({
 export default function Controller({ navigation }) {
   const [splash, setSplash] = useState(true);
   const [automaticMode, setAutomaticMode] = useState(true);
-  const [loadingText, setLoadingText] = useState('Establishing connection')
+  const [loadingText, setLoadingText] = useState('Connecting to mower')
   const { ip, port } = useAppContext();
   const [speed, setSpeed] = useState(5);
-
-  // const [connection, setConnection] = useState(false)
-
-  // useEffect(() => {
-  //   // setLoadingText("Connecting to server")
-  //   // getMower((response, error) => {
-  //   //   if(response.status == 200) {
-  //   //     setSplash(false)
-  //   //     // Check whether mower is in automatic mode and set that state
-  //   //   } else {
-  //   //     setLoadingText("Connecting to mower")
-
-  //   //     checkMowerConnection((response, error) => {
-  //   //       if (response.status == 200) {
-  //   //         setSplash(false)
-  //   //       } else {
-  //   //         setLoadingText("Could not connect to mower")
-  //   //         setTimeout(() => {
-  //   //           setConnection(!connection)
-  //   //         }, 3000);
-  //   //       }
-  //   //     })
-  //   //   }
-  //   // })
-
-
-  //   setTimeout(() => {
-  //     setSplash(false);
-  //   }, 1500);
-  // }, [/*connection*/]);
+  const [connectionFailed, setConnectionFailed] = useState(false);
 
   useEffect(() => {
     const delay = automaticMode ? 5000 : 10000;
@@ -150,10 +121,6 @@ export default function Controller({ navigation }) {
       alert('Error switching automode')
       //callback([], error);
     });
-
-    
-    // TODO: if(automode off) Send startDrivingAutonomously-req to
-    // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
 
   const getMower = (callback) => {
@@ -174,6 +141,7 @@ export default function Controller({ navigation }) {
     await fetch('http://' + ip + ':' + port + '/GetStatus')
     .then(response => {
       if(response.status == 200) {
+        setConnectionFailed(false)
         splash ? setSplash(false) : null;
         response.json().then(body => {
           if(body) {
@@ -189,6 +157,7 @@ export default function Controller({ navigation }) {
     })
     .catch(error => {
       setSplash(true);
+      setConnectionFailed(true);
       setLoadingText("Connecting to mower")
     })
   }
@@ -296,7 +265,7 @@ export default function Controller({ navigation }) {
 
   return (
     <Layout>
-      <Loading loading={splash} loadingText={loadingText}/>
+      <Loading loading={splash} loadingText={loadingText} connectionFailed={connectionFailed}/>
       <View style={styles.container}>
         <View>
           <View style={styles.headerContainer}>

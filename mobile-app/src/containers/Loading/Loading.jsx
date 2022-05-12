@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, View, StyleSheet, Text } from 'react-native';
+import { Animated, View, StyleSheet, Text, Dimensions, KeyboardAvoidingView } from 'react-native';
 import LottieView from 'lottie-react-native';
 import COLORS from '../../constants/colors';
+import { TextInput } from 'react-native-gesture-handler';
+import { useAppContext } from '../../hooks/useAppContext';
 
 const styles = StyleSheet.create({
   containerWrapper: {
@@ -36,12 +38,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'playfairDisplay-medium',
     textAlign: 'center',
+  },
+  textInput: {
+    borderColor: COLORS.SNOW,
+    color: COLORS.SNOW,
+    fontFamily: 'montserrat-regular',
+    width: Dimensions.get('window').width * 0.8,
+    height: Dimensions.get('window').height * 0.07,
+    borderRadius: 12,
+    padding: 8,
+    borderWidth: 1,
+  },
+  inputHeader: {
+    fontFamily: 'montserrat-bold',
+    color: COLORS.SNOW,
+    fontSize: 20,
+    textAlignVertical: 'center',
+    marginBottom: 5,
+    marginTop: 20,
+    marginTop: 50,
   }
 });
 
 const ANIMATION_DURATION = 500;
 
-const LoadingScreen = ({ loading, loadingText }) => {
+const LoadingScreen = ({ loading, loadingText, connectionFailed }) => {
+  const { ip, setIp, port, setPort } = useAppContext();
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const zIndexAnim = useRef(new Animated.Value(-10000)).current;
   useEffect(() => {
@@ -84,13 +106,23 @@ const LoadingScreen = ({ loading, loadingText }) => {
   }, [loading]);
   return (
     <Animated.View style={[styles.containerWrapper, { opacity: opacityAnim, zIndex: zIndexAnim }]}>
-      <View style={styles.container}>
-        <Text style={styles.text}>Intelligenta Mobila System</Text>
-        <View style={styles.loader}>
-          <LottieView source={require('./components/loadingAnimation.json')} autoPlay loop />
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <View style={styles.container}>
+          
+          <Text style={styles.text}>Intelligenta Mobila System</Text>
+          <View style={styles.loader}>
+            <LottieView source={require('./components/loadingAnimation.json')} autoPlay loop />
+          </View>
+          <Text style={styles.loadingText}>{loadingText}</Text>
+            {connectionFailed ? 
+              <>
+                <Text style={styles.inputHeader}>Mower IP:</Text>
+                <TextInput style={styles.textInput} value={ip} onChangeText={setIp}></TextInput>
+              </>
+              :
+              null}
         </View>
-      <Text style={styles.loadingText}>{loadingText}</Text>
-      </View>
+      </KeyboardAvoidingView>
     </Animated.View>
   );
 };
