@@ -118,7 +118,20 @@ export default function Controller({ navigation, route }) {
     }, 1500);
   }, [/*connection*/]);
 
+  useEffect(() => {
+    const delay = automaticMode ? 5000 : 10000;
+    const interval = setInterval(async () => {
+        console.log("update mower status every 5 seconds");
+        await checkMowerStatus();
+    }, delay)
+    return () => clearInterval(interval)
+  }, []);
+
   const onPressAutomode = () => {
+    if(!automaticMode == false) {
+      stopMoving((response, error) => {})
+    }
+
     console.log('http://' + ip + ':' + port + '/AutoMode')
     fetch('http://' + ip + ':' + port + '/AutoMode', {
       method: 'POST',
@@ -137,9 +150,7 @@ export default function Controller({ navigation, route }) {
       //callback([], error);
     });
 
-    if(!automaticMode == false) {
-      stopMoving((response, error) => {})
-    }
+    
     // TODO: if(automode off) Send startDrivingAutonomously-req to
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
@@ -158,8 +169,27 @@ export default function Controller({ navigation, route }) {
     });
   }
 
-  const checkMowerConnection = (callback) => {
-    stopMoving(callback);
+  const checkMowerStatus = async (callback) => {
+    await fetch('http://' + ip + ':' + port + '/GetStatus')
+    .then(response => {
+      if(response.status == 200) {
+        splash ? setSplash(false) : null;
+        response.json().then(body => {
+          if(body) {
+            setAutomaticMode(true);
+          } else {
+            setAutomaticMode(false);
+          }
+          console.log(body.mode);
+        });
+      } else {
+        setSplash(true);
+      }
+    })
+    .catch(error => {
+      setSplash(true);
+      setLoadingText("Connecting to mower")
+    })
   }
 
   const moveMower = (direction, callback) => {
@@ -170,9 +200,9 @@ export default function Controller({ navigation, route }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        speed: speed, 
         direction: direction,
-      }),
+        speed: speed
+      })
     }).then((response) => {
       callback(response, null);
     }).catch((error) => {
@@ -193,6 +223,23 @@ export default function Controller({ navigation, route }) {
       callback([], error);
     });
   }
+
+  const updateAutoSpeed = (callback) => {
+    fetch('http://' + ip + ':' + port + '/SetSpeed', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed
+      })
+    }).then((response) => {
+      callback(response, null)
+    }).catch((error) => {
+      callback([], error)
+    })
+  }
  
   const onPressForward = () => {
     moveMower("forward", (response, error) => {
@@ -200,7 +247,6 @@ export default function Controller({ navigation, route }) {
         alert("An error occured, mower is probably not connected")
       }
     })
-    // TODO: Check that request works when possible
   }
   const onPressLeft = () => {
     moveMower("left", (response, error) => {
@@ -208,7 +254,6 @@ export default function Controller({ navigation, route }) {
         alert("An error occured, mower is probably not connected")
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onPressRight = () => {
@@ -217,7 +262,6 @@ export default function Controller({ navigation, route }) {
         alert("An error occured, mower is probably not connected")
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onPressBackward = () => {
@@ -226,7 +270,6 @@ export default function Controller({ navigation, route }) {
         alert("An error occured, mower is probably not connected")
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onRelease = () => {
@@ -235,11 +278,19 @@ export default function Controller({ navigation, route }) {
         alert("An error occured, mower is probably not connected")
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onSlidingComplete = (value) => {
     setSpeed(Math.round(value))
+    if(automaticMode) {
+      updateAutoSpeed((response, error) => {
+        if(response) {
+          console.log("Speed updated")
+        } else if (error) {
+          console.log("Error")
+        }
+      })
+    }
   }
 
   return (
@@ -291,17 +342,17 @@ export default function Controller({ navigation, route }) {
         <View style={styles.controllerContainer}>
           <View style={styles.forwardContainer}>
             <RoundButton title="Forward" icon={icons.FORWARD.icon} onPress={onPressForward} onRelease={onRelease}
-                        disabled={automaticMode}/>
+              disabled={automaticMode}/>
           </View>
           <View style={styles.leftRightContainer}>
             <RoundButton title="Left" icon={icons.LEFT.icon} style={{ marginRight: 50 }} onPress={onPressLeft}
-                        onRelease={onRelease} disabled={automaticMode}/>
+              onRelease={onRelease} disabled={automaticMode}/>
             <RoundButton title="Right" icon={icons.RIGHT.icon} style={{ marginLeft: 50 }} onPress={onPressRight}
-                        onRelease={onRelease} disabled={automaticMode}/>
+              onRelease={onRelease} disabled={automaticMode}/>
           </View>
           <View style={styles.backwardContainer}>
             <RoundButton title="Backward" icon={icons.BACKWARD.icon} onPress={onPressBackward} onRelease={onRelease}
-                        disabled={automaticMode}/>
+              disabled={automaticMode}/>
           </View>
         </View>
         <SpeedSlider onSlidingComplete={onSlidingComplete} value={speed}/>
