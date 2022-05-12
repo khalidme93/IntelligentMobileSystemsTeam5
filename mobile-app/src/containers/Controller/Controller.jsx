@@ -260,7 +260,7 @@ export default function Controller({ navigation }) {
               color={colors.SNOW}
               onPress={() => navigation.navigate('Map')}
             />
-          < /View>
+          </View>
         </View>
         <View style={styles.autoButtonContainer}>
           <AutoModeButton automatic={automaticMode} onPress={() => {
