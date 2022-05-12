@@ -86,35 +86,48 @@ export default function Controller({ navigation }) {
 
   // const [connection, setConnection] = useState(false)
 
+  // useEffect(() => {
+  //   // setLoadingText("Connecting to server")
+  //   // getMower((response, error) => {
+  //   //   if(response.status == 200) {
+  //   //     setSplash(false)
+  //   //     // Check whether mower is in automatic mode and set that state
+  //   //   } else {
+  //   //     setLoadingText("Connecting to mower")
+
+  //   //     checkMowerConnection((response, error) => {
+  //   //       if (response.status == 200) {
+  //   //         setSplash(false)
+  //   //       } else {
+  //   //         setLoadingText("Could not connect to mower")
+  //   //         setTimeout(() => {
+  //   //           setConnection(!connection)
+  //   //         }, 3000);
+  //   //       }
+  //   //     })
+  //   //   }
+  //   // })
+
+
+  //   setTimeout(() => {
+  //     setSplash(false);
+  //   }, 1500);
+  // }, [/*connection*/]);
+
   useEffect(() => {
-    // setLoadingText("Connecting to server")
-    // getMower((response, error) => {
-    //   if(response.status == 200) {
-    //     setSplash(false)
-    //     // Check whether mower is in automatic mode and set that state
-    //   } else {
-    //     setLoadingText("Connecting to mower")
-
-    //     checkMowerConnection((response, error) => {
-    //       if (response.status == 200) {
-    //         setSplash(false)
-    //       } else {
-    //         setLoadingText("Could not connect to mower")
-    //         setTimeout(() => {
-    //           setConnection(!connection)
-    //         }, 3000);
-    //       }
-    //     })
-    //   }
-    // })
-
-
-    setTimeout(() => {
-      setSplash(false);
-    }, 1500);
-  }, [/*connection*/]);
+    const delay = automaticMode ? 5000 : 10000;
+    const interval = setInterval(async () => {
+        console.log("update mower status every 5 seconds");
+        await checkMowerStatus();
+    }, delay)
+    return () => clearInterval(interval)
+  }, []);
 
   const onPressAutomode = () => {
+    if(!automaticMode == false) {
+      stopMoving((response, error) => {})
+    }
+
     setAutomaticMode(!automaticMode);
     console.log('http://' + ip + ':' + port + '/AutoMode')
     if (!automaticMode === false) {
@@ -138,6 +151,7 @@ export default function Controller({ navigation }) {
       //callback([], error);
     });
 
+    
     // TODO: if(automode off) Send startDrivingAutonomously-req to
     // else if(automode on) Send stopDrivingAutonomously-req to backend
   }
@@ -156,8 +170,27 @@ export default function Controller({ navigation }) {
     });
   }
 
-  const checkMowerConnection = (callback) => {
-    stopMoving(callback);
+  const checkMowerStatus = async (callback) => {
+    await fetch('http://' + ip + ':' + port + '/GetStatus')
+    .then(response => {
+      if(response.status == 200) {
+        splash ? setSplash(false) : null;
+        response.json().then(body => {
+          if(body) {
+            setAutomaticMode(true);
+          } else {
+            setAutomaticMode(false);
+          }
+          console.log(body.mode);
+        });
+      } else {
+        setSplash(true);
+      }
+    })
+    .catch(error => {
+      setSplash(true);
+      setLoadingText("Connecting to mower")
+    })
   }
 
   const moveMower = (direction, callback) => {
@@ -168,9 +201,9 @@ export default function Controller({ navigation }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        speed: speed,
         direction: direction,
-      }),
+        speed: speed
+      })
     }).then((response) => {
       callback(response, null);
     }).catch((error) => {
@@ -192,13 +225,29 @@ export default function Controller({ navigation }) {
     });
   }
 
+  const updateAutoSpeed = (callback) => {
+    fetch('http://' + ip + ':' + port + '/SetSpeed', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: speed
+      })
+    }).then((response) => {
+      callback(response, null)
+    }).catch((error) => {
+      callback([], error)
+    })
+  }
+ 
   const onPressForward = () => {
     moveMower('left', (response, error) => {
       if (error) {
         alert('An error occured, mower is probably not connected')
       }
     })
-    // TODO: Check that request works when possible
   }
   const onPressLeft = () => {
     moveMower('left', (response, error) => {
@@ -206,7 +255,6 @@ export default function Controller({ navigation }) {
         alert('An error occured, mower is probably not connected')
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onPressRight = () => {
@@ -215,7 +263,6 @@ export default function Controller({ navigation }) {
         alert('An error occured, mower is probably not connected')
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onPressBackward = () => {
@@ -224,7 +271,6 @@ export default function Controller({ navigation }) {
         alert('An error occured, mower is probably not connected')
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onRelease = () => {
@@ -233,11 +279,19 @@ export default function Controller({ navigation }) {
         alert('An error occured, mower is probably not connected')
       }
     })
-    // TODO: Check that request works when possible
   }
 
   const onSlidingComplete = (value) => {
     setSpeed(Math.round(value))
+    if(automaticMode) {
+      updateAutoSpeed((response, error) => {
+        if(response) {
+          console.log("Speed updated")
+        } else if (error) {
+          console.log("Error")
+        }
+      })
+    }
   }
 
   return (
