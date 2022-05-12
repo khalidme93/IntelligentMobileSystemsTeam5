@@ -33,7 +33,7 @@ export default function MowerMap() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval( async () => {
       console.log('update the map every second :)');
       //await fetchAPI();
     }, 1000)
