@@ -107,14 +107,18 @@ _Below is an example of how you can instruct your audience on installing and set
    ```sh
    git clone https://github.com/khalidme93/IntelligentMobileSystemsTeam5.git
    ```
-2. Install NPM packages
+2. Install NPM packages or YARN packages
    ```sh
    npm install
+   or
+   yarn install
    ```
 3. Enter the /mobile_app and start the application
    ```sh
-   npm start
+   expo start
    ```
+4. Install and open the expo application on your IOS or android device
+5. Scan the QR code in the terminal of the application with your mobile device to open the app
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
