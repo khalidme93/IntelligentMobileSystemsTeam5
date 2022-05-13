@@ -4,41 +4,24 @@ import colors from '../../constants/colors';
 import Svg, { Polyline, Circle } from 'react-native-svg'
 
 export default function MowerMap() {
-
-    useEffect(async () => {
-        await fetchAPI();
-    }, []);
-    
-    useEffect(() => {
-        const interval = setInterval( async () => {
-            console.log("update the map every second :)");
-            //await fetchAPI();
-        }, 1000)
-        return () => clearInterval(interval)
-    }, []);
-    
-    function translateX(x){
-        const intX = parseInt(x);
-        return (250+(intX));
-    }
-    function translateY(y){
-        const intY = parseInt(y);
-        return (250-(intY));
-    }
   const [points, setPoints] = useState(null);
   const [cols, setCols] = useState(null);
 
-  useEffect(async () => {
-    await fetchAPI();
+  useEffect(() => {
+    fetchAPI();
   }, []);
 
   useEffect(() => {
-    const interval = setInterval( async () => {
-      console.log('update the map every second :)');
-      //await fetchAPI();
+    const interval = setInterval(async () => {
+      console.log("update the map every second :)");
+      // await fetchAPI();
     }, 1000)
-    return () => clearInterval(interval)
+    return () => {clearInterval(interval);}
   }, []);
+
+  function translateArray(cols, cords) {
+
+  }
 
   function translateX(x) {
     const intX = parseInt(x);
@@ -50,7 +33,7 @@ export default function MowerMap() {
     return (250 - (intY));
   }
 
-  async function fetchAPI() {
+  function fetchAPI() {
     fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
       .then((response) => response.json())
       .then((json) => {
@@ -81,7 +64,7 @@ export default function MowerMap() {
         {cols && cols.map((value, index) => {
           const [x, y, col] = value.split(',')
           if (col === '1') {
-            return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red"/>
+            return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red" />
           }
         })
         }

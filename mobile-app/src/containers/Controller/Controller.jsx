@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import LargeButton from '../../components/Buttons/LargeButton';
 import RoundButton from '../../components/Buttons/RoundButton';
@@ -11,6 +11,7 @@ import AutoModeButton from '../../components/Buttons/AutoModeButton';
 import Loading from '../Loading/Loading';
 import { useAppContext } from '../../hooks/useAppContext';
 import { useApi } from '../../hooks/useApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
 });
 
 export default function Controller({ navigation }) {
-  const [splash, setSplash] = useState(true);
+  const [splash, setSplash] = useState(false);
   const [automaticMode, setAutomaticMode] = useState(true);
   const [loadingText, setLoadingText] = useState('Connecting to mower')
   const { ip, port } = useAppContext();
@@ -87,15 +88,16 @@ export default function Controller({ navigation }) {
   const [speed, setSpeed] = useState(5);
   const [connectionFailed, setConnectionFailed] = useState(false);
 
-  useEffect(() => {
-    const delay = automaticMode ? 5000 : 10000;
-    const interval = setInterval(async () => {
-      console.log('update mower status every 5 seconds');
-      await mowerStatus();
-    }, delay)
-    return () => clearInterval(interval)
-  }, []);
-
+    useFocusEffect(() => {
+      const delay = automaticMode ? 5000 : 10000;
+      const interval = setInterval(async () => {
+        console.log('update mower status every 5 seconds');
+        // await mowerStatus();
+      }, delay)
+      return () => clearInterval(interval);
+    });
+  
+  
   const onPressAutomode = async () => {
     !automaticMode === false ? await stopMower() : null;
     try {
