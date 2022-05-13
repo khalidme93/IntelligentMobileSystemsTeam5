@@ -83,3 +83,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+Arduino/Steve_move_from_RPI/Steve_move_from_RPI.ino
