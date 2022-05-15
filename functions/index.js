@@ -324,4 +324,37 @@ app.post("/startAutoDriving", (req, res) => {
 });
 
 
+app.get("/getMowerState", (req, res) => {
+  const status = [];
+  db.collection("mowers").doc("mower").get().then((querySnapshot) => {
+    const isManual = querySnapshot.get("isManual");
+    const isOnline = querySnapshot.get("isOnline");
+    const currentMapId = querySnapshot.get("currentMapId");
+    const mowerName = querySnapshot.get("mowerName");
+    status.push({isManual: isManual, isOnline: isOnline, currentMapId: currentMapId, mowerName: mowerName});
+  }).then(() => {
+    return res.status(200).send("Document successfully written!", status);
+  }).catch((error) => {
+    return res.status(500).send("Error writing document: ", error);
+  });
+});
+
+app.post("/addMowerStatus", (req, res) => {
+  const isManual = req.body.isManual;
+  const isOnline = req.body.isOnline;
+  const mowerName = req.body.mowerName;
+  const currentMapId = req.body.currentMapId;
+  console.log(isManual, isOnline, mowerName, currentMapId);
+ db.collection("mowers").doc("mower").update({
+    isManual: isManual,
+    isOnline: isOnline,
+    mowerName: mowerName,
+    currentMapId: currentMapId,
+  }).then(() => {
+    return res.status(200).send("Document successfully written!");
+  }).catch((error) => {
+    return res.status(500).send("Error writing document: ", error);
+  });
+});
+
 exports.v1 = functions.https.onRequest(app);
