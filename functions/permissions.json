@@ -1,0 +1,20 @@
+{
+  "type": "service_account",
+  "project_id": "intelligentmobilesystemsteam5",
+  "private_key_id": "206e4a3178618ad3c9c96128c56f22bff0a3ad96",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5tw/4R/uTrI5C\nwj2RCYt6vp4UNv66I2YUHII04ZqvlEJqPdSKYT7qpOe02fTzNMpKoFq3dl9kvUlb\nNCBeubSAOlcTWxa7nXPsAk2hgg4iceLA5nVcn68Gny7ED+6XW6lfyuCuhOCd8Lhy\nFclLD9sVqGEd5HOGy8EonZuijQGNBErFZAOdsAV36lqbFXOkQcEwK3Z2VYrpBd4O\nLuBKGWeSPX3XwKKDTKN0odPYLXIkqq2YcrA8sTOZPQs7uI0V8LzSVMgRvKWKEycd\nBgSLWPY+Fhd1EblKOjUCyoin6haQAUTLkPYHW2U2dA7+ezF5FFUItbJ303oWPyxi\n2s3elHFTAgMBAAECggEADO4tA3lnj8Gc6hMCHF4QwwwQj5HArI8YZWASxMHMdlsZ\nQLJrYPMiYU34AASI5IIRb564kjuAqs/vEpWPh2jgo2jsdSGLdKai0pTaeNtIRqet\nRQcGtts7YXel1urRDuLH6S6D9EK2LOj8vpy7tik1dM2TbXRhgsoe+cf3dRriN8It\nGY23rEGsKGTXNVYhXXgWr4QBiEdVXcBMtDewB+yYNBK/AWmLtoYOyMjMuGHDLStU\n6CvKdDwAFd2zhCjts7Ms60xHugdQCwBalW+d+Mqj/g/Su7AQYofEA+iIkDt9cQ9u\n4suSM8FY044E1cX11W+DTA3pwenG+dmVsUYOLoI4WQKBgQD51Km5z6gc3TxfO4F6\n57GmpXnE/iopPS17lBlkhgYZybysHjBsICHAOt3Qy+HN9FFbvgRapMfaM8+qBSB2\nA8r6tmYLE3gbmcj/rOFzPHzC/Dntds+EpCIia4GPFWKnZTFmfwNoO5lwtUFNPKbL\n4wII3q5tNaximXa5Da+OEtCZvQKBgQC+TRWOTv5Kq1epOlzIV37CUDIOIuZWjtvI\nDRvr4eMo8R/687Yv/NkD8VwGH5/D5CHF5y71X+URQTJIB9XBa/nZwhmLNlAXlQsP\nmxtYAOXrEZ8UMkcjgQBPbOVrwYptD38jdjZQLRD44uIO6TnMO7m5pXG1llV+2dPA\nw20lK9kATwKBgBiD7M/F98o1T3pM3YzQ9ZbTwBo7kqmPTkpFIyTBHhIjwLbnE3tY\nv9ccL64Qg6zxH5awE79NUiswUF1vuVq7TozBn0vQ8kVLFvU34rurINcFZy3NLdnn\nPU5BXGpM/+xLOsjDB/OPfaQYtTq+C+QP96AlMdqXnL3kL0lDdYmsgPnFAoGARl2o\nb9ODscaDhn6fGjFIHL+ckp+S/kSavfEi9uiyn0vxoFCHeF0NPaj8dwMwhzWOy2e9\ndFu+DtBFsF69SmULoNplqZUurlmdGmsnBDZoza/ZW5VvupATtkq01lBdSBBn2Yv3\nb1QKp4z1O8A/b+ZRuXSUhCmPeXVAGFHqxMje138CgYEA0zK16Li0BjU/xQx1o1cs\nofHnX0bPStJ4NarPrFcPexDBNmrVY7Y7uHWh/k1Ae7VhM2ra7Iz0+pG2CgeAnWSW\n4RDTIdDGIrz7hcBHbxY4Seo/BTO/T67f9rObkSEBzBWWvoxXJKsgzIhrooKP0wzk\nS44OwjkhLSVVZ0S3hkAlg9Q=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-1b25m@intelligentmobilesystemsteam5.iam.gserviceaccount.com",
+  "client_id": "101036144217652102974",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1b25m%40intelligentmobilesystemsteam5.iam.gserviceaccount.com",
+  "apiKey": "AIzaSyCq1kRS37EtKEAaj8R7Z4pqKzCK67RsAJY",
+  "authDomain": "intelligentmobilesystemsteam5.firebaseapp.com",
+  "databaseURL":"https://intelligentmobilesystemsteam5-default-rtdb.europe-west1.firebasedatabase.app",
+  "projectId": "intelligentmobilesystemsteam5",
+  "storageBucket": "intelligentmobilesystemsteam5.appspot.com",
+  "messagingSenderId": "1047517056434",
+  " appId": "1:1047517056434:web:08ce4813881625211b28ab"
+}
+
