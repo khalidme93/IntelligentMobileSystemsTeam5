@@ -1,5 +1,5 @@
 
-/*const getDatabase = require("firebase/database");
+/* const getDatabase = require("firebase/database");
 const initializeApp = require('firebase/app');
 
 const firebaseConfig = {
