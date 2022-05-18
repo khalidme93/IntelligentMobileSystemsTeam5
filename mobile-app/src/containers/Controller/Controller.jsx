@@ -92,7 +92,7 @@ export default function Controller({ navigation }) {
       const delay = automaticMode ? 5000 : 10000;
       const interval = setInterval(async () => {
         console.log('update mower status every 5 seconds');
-        // await mowerStatus();
+        await mowerStatus();
       }, delay)
       return () => clearInterval(interval);
     });

@@ -7,45 +7,61 @@ export default function MowerMap() {
   const [points, setPoints] = useState(null);
   const [cols, setCols] = useState(null);
 
+  // useEffect(async () => {
+  //   await fetchAPI();
+  // }, []);
+
+  // useEffect(async () => {
+  //     await fetchAPI();
+  // }, []);
+  
   useEffect(() => {
-    fetchAPI();
+      const interval = setInterval( async () => {
+          console.log("update the map every second :)");
+          await fetchAPI();
+      }, 1000)
+      return () => clearInterval(interval)
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      console.log("update the map every second :)");
-      // await fetchAPI();
-    }, 1000)
-    return () => {clearInterval(interval);}
-  }, []);
-
-  function translateArray(cols, cords) {
-
-  }
+  // useEffect(() => {
+  //   const interval = setInterval( async () => {
+  //     console.log('update the map every second :)');
+  //     //await fetchAPI();
+  //   }, 1000)
+  //   return () => clearInterval(interval)
+  // }, []);
 
   function translateX(x) {
-    const intX = parseInt(x);
+    const intX = parseInt(x) / 500;
     return (250 + (intX));
   }
 
   function translateY(y) {
-    const intY = parseInt(y);
+    const intY = parseInt(y) / 500;
     return (250 - (intY));
   }
 
-  function fetchAPI() {
-    fetch('https://a924372d-038f-4dd2-bc29-112a92a7d6f5.mock.pstmn.io/points')
+  async function fetchAPI() {
+    fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/map/currentMap')
       .then((response) => response.json())
       .then((json) => {
-        let array = json[0].map((value) => {
-          return `${translateX(value['x'])},${translateY(value['y'])}`
-        });
-        let colsArray = json[0].map((value) => {
-          return `${translateX(value['x'])},${translateY(value['y'])},${value['col']}`
-        })
-        console.log(array);
+        let pointsArray = []
+        let colsArray = []
+
+        if(json.pathPoints != undefined) {
+          json.pathPoints.forEach(pathPoint => {
+            console.log(pathPoint)
+            pointsArray.push(`${translateX(pathPoint['x'])},${translateY(pathPoint['y'])}`);
+          });
+        } 
+        if(json.collisionEvents != undefined) {
+          json.collisionEvents.forEach(collision => {
+            colsArray.push(`${translateX(collision['x'])},${translateY(value['y'])},${collision['col']}`);
+          });
+        }
+
         setCols(colsArray)
-        setPoints(array);
+        setPoints(pointsArray);
       })
       .catch((error) => {
         console.error(error);
@@ -64,7 +80,7 @@ export default function MowerMap() {
         {cols && cols.map((value, index) => {
           const [x, y, col] = value.split(',')
           if (col === '1') {
-            return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red" />
+            return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red"/>
           }
         })
         }
