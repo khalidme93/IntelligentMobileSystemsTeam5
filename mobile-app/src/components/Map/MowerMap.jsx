@@ -37,25 +37,26 @@ export default function MowerMap() {
         //Add all pathpoints to an array
         if(json.pathPoints != undefined) {
           json.pathPoints.forEach(pathPoint => {
-            console.log(pathPoint)
             pointsArray.push(`${translateX(pathPoint['x'])},${translateY(pathPoint['y'])}`);
           });
         }
+
         //Add all collision avoidance events to an array
-        if(json.collisionEvents != undefined) {
-          json.collisionEvents.forEach(collision => {
-            colsArray.push(`${translateX(collision['x'])},${translateY(value['y'])},${collision['col']}`);
+        if(json.collisionEvent != undefined) {
+          json.collisionEvent.forEach(collision => {
+            colsArray.push(`${translateX(collision['x'])},${translateY(collision['y'])}`);
           });
         }
 
         //Update the state with the new arrays
-        setCols(colsArray)
+        setCols(colsArray);
         setPoints(pointsArray);
       })
       .catch((error) => {
         console.error(error);
       });
   }
+  console.log(cols)
 
   return (
     <View>
@@ -67,10 +68,8 @@ export default function MowerMap() {
           strokeWidth="2"
         />
         {cols && cols.map((value, index) => {
-          const [x, y, col] = value.split(',')
-          if (col === '1') {
-            return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red"/>
-          }
+          const [x, y] = value.split(',')
+          return <Circle key={{ value, ...index }} cx={x} cy={y} r="6" fill="red"/>
         })
         }
       </Svg>
