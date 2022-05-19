@@ -88,15 +88,14 @@ export default function Controller({ navigation }) {
   const [speed, setSpeed] = useState(5);
   const [connectionFailed, setConnectionFailed] = useState(false);
 
-    useFocusEffect(() => {
-      const delay = automaticMode ? 5000 : 10000;
-      const interval = setInterval(async () => {
-        console.log('update mower status every 5 seconds');
-        await mowerStatus();
-      }, delay)
-      return () => clearInterval(interval);
-    });
-  
+  useFocusEffect(() => {
+    const delay = 5000; //Interval of 5 seconds
+    const interval = setInterval(async () => {
+      console.log('update mower status every 5 seconds');
+      await mowerStatus();
+    }, delay)
+    return () => clearInterval(interval);
+  });
   
   const onPressAutomode = async () => {
     !automaticMode === false ? await stopMower() : null;
@@ -109,20 +108,6 @@ export default function Controller({ navigation }) {
       console.error(e);
     }
   }
-
-  // const getMower = (callback) => {
-  //   fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/mower', {
-  //     method: 'GET',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     }
-  //   }).then((response) => {
-  //     callback(response, null)
-  //   }).catch((error) => {
-  //     callback([], error)
-  //   });
-  // }
 
   const mowerStatus = async () => {
     try {

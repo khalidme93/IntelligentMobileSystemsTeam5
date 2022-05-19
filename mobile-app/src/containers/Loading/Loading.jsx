@@ -5,6 +5,7 @@ import COLORS from '../../constants/colors';
 import { TextInput } from 'react-native-gesture-handler';
 import { useAppContext } from '../../hooks/useAppContext';
 
+//Styling for the loadinscreen
 const styles = StyleSheet.create({
   containerWrapper: {
     position: 'absolute',
@@ -62,9 +63,12 @@ const styles = StyleSheet.create({
 const ANIMATION_DURATION = 500;
 
 const LoadingScreen = ({ loading, loadingText, connectionFailed }) => {
-  const { ip, setIp } = useAppContext();
+  const { ip, setIp } = useAppContext(); //Get the ip and setter function from context
+  
+  //Loading screen animation setup
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const zIndexAnim = useRef(new Animated.Value(-10000)).current;
+  
   useEffect(() => {
     if (loading) {
       Animated.timing(
@@ -113,7 +117,7 @@ const LoadingScreen = ({ loading, loadingText, connectionFailed }) => {
             <LottieView source={require('./components/loadingAnimation.json')} autoPlay loop />
           </View>
           <Text style={styles.loadingText}>{loadingText}</Text>
-            {connectionFailed ? 
+            {connectionFailed ? //Shows the textbox for entering IP if connection fails
               <>
                 <Text style={styles.inputHeader}>Mower IP:</Text>
                 <TextInput style={styles.textInput} value={ip} onChangeText={setIp} />

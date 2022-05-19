@@ -32,12 +32,12 @@ export default function MowerMap() {
   // }, []);
 
   function translateX(x) {
-    const intX = parseInt(x) / 500;
+    const intX = parseInt(x);
     return (250 + (intX));
   }
 
   function translateY(y) {
-    const intY = parseInt(y) / 500;
+    const intY = parseInt(y);
     return (250 - (intY));
   }
 

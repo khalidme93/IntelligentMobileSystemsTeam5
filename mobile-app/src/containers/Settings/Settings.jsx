@@ -5,6 +5,7 @@ import Layout from '../../components/Layout/Layout';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../../hooks/useAppContext';
 
+//Styling for the settings screen
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
@@ -54,8 +55,7 @@ const styles = StyleSheet.create({
 });
 
 export default function Settings({ navigation }) {
-  // TODO: Add default IP as standard here
-  const { ip, setIp, port, setPort } = useAppContext();
+  const { ip, setIp, port, setPort } = useAppContext(); //Get the ip, port and setter functions from the context
 
   return (
     <Layout>

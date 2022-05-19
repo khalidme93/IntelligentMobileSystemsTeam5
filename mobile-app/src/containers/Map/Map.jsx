@@ -7,6 +7,7 @@ import colors from '../../constants/colors';
 import Layout from '../../components/Layout/Layout';
 import grass from '../../assets/images/grass.jpg';
 
+//Styling used for the map screen
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
