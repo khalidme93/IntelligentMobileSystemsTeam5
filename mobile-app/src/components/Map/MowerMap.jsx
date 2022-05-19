@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, View, Dimensions } from 'react-native';
-import colors from '../../constants/colors';
+import { View } from 'react-native';
 import Svg, { Polyline, Circle } from 'react-native-svg'
 
 export default function MowerMap() {
   const [points, setPoints] = useState(null);
   const [cols, setCols] = useState(null);
-
-  // useEffect(async () => {
-  //   await fetchAPI();
-  // }, []);
-
-  // useEffect(async () => {
-  //     await fetchAPI();
-  // }, []);
   
   //Function for updating the map every second
   useEffect(() => {
@@ -23,14 +14,6 @@ export default function MowerMap() {
       }, 1000)
       return () => clearInterval(interval)
   }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval( async () => {
-  //     console.log('update the map every second :)');
-  //     //await fetchAPI();
-  //   }, 1000)
-  //   return () => clearInterval(interval)
-  // }, []);
 
   //Translate the coordinates from API so that we can draw them out on the canvas
   function translateX(x) {

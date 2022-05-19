@@ -4,6 +4,7 @@ import { useAppContext } from './useAppContext';
 export const useApi = () => {
   const { ip, port } = useAppContext();
 
+  //Function used for sending API requests.
   const request = async (method, url, config) => {
     try {
       return await fetch(`http://${ip}:${port}/${url}`, {

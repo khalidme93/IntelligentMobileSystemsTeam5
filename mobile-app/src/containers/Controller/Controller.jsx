@@ -9,7 +9,6 @@ import SettingsButton from '../../components/Buttons/SettingsButton';
 import icons from '../../constants/icons';
 import AutoModeButton from '../../components/Buttons/AutoModeButton';
 import Loading from '../Loading/Loading';
-import { useAppContext } from '../../hooks/useAppContext';
 import { useApi } from '../../hooks/useApi';
 import { useFocusEffect } from '@react-navigation/native';
 
