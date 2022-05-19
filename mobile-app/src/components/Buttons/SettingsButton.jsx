@@ -1,10 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View, Dimensions } from "react-native";
 import { Ionicons } from '@expo/vector-icons'
-import colors from '../../constants/colors';
 
 export default function SettingsButton({color, size, onPress = () => null}) {
-
   return (
     <View>
       <TouchableOpacity onPress={onPress}>

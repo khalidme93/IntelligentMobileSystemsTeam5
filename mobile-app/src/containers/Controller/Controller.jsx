@@ -83,7 +83,6 @@ export default function Controller({ navigation }) {
   const [splash, setSplash] = useState(false);
   const [automaticMode, setAutomaticMode] = useState(true);
   const [loadingText, setLoadingText] = useState('Connecting to mower')
-  const { ip, port } = useAppContext();
   const { request } = useApi();
   const [speed, setSpeed] = useState(5);
   const [connectionFailed, setConnectionFailed] = useState(false);
@@ -97,18 +96,19 @@ export default function Controller({ navigation }) {
     return () => clearInterval(interval);
   });
   
+  //Switching between autonomous and manual mode
   const onPressAutomode = async () => {
     !automaticMode === false ? await stopMower() : null;
     try {
       const response = await request('POST', 'AutoMode', { body: JSON.stringify({ active: !automaticMode }) });
       const res = await mowerStatus();
-      console.log(res)
       setAutomaticMode(res.mode === 1)
     } catch (e) {
       console.error(e);
     }
   }
 
+  //Checking status and connection to mower
   const mowerStatus = async () => {
     try {
       const response = await request('GET', 'GetStatus');
@@ -128,6 +128,7 @@ export default function Controller({ navigation }) {
     }
   }
 
+  //Request to stop the mower
   const stopMower = async () => {
     try {
       const response = await request('POST', 'StopMoving');
@@ -138,6 +139,7 @@ export default function Controller({ navigation }) {
     }
   }
 
+  //Request used when driving mower manually
   const moveMowerTo = async direction => {
     try {
       const response = await request('POST', 'Move', {
@@ -150,6 +152,7 @@ export default function Controller({ navigation }) {
     }
   }
 
+  //Changes the speed when user has changed the slider
   const onSlidingComplete = async (value) => {
     setSpeed(Math.round(value))
     if (automaticMode) {

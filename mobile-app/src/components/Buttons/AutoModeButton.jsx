@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button } from 're
 import colors from '../../constants/colors';
 import {Ionicons} from '@expo/vector-icons'
 
+//Styles for the automodebutton
 const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width * 0.33,

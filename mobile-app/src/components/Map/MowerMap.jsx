@@ -15,6 +15,7 @@ export default function MowerMap() {
   //     await fetchAPI();
   // }, []);
   
+  //Function for updating the map every second
   useEffect(() => {
       const interval = setInterval( async () => {
           console.log("update the map every second :)");
@@ -31,6 +32,7 @@ export default function MowerMap() {
   //   return () => clearInterval(interval)
   // }, []);
 
+  //Translate the coordinates from API so that we can draw them out on the canvas
   function translateX(x) {
     const intX = parseInt(x);
     return (250 + (intX));
@@ -41,6 +43,7 @@ export default function MowerMap() {
     return (250 - (intY));
   }
 
+  //Fetch map from the API
   async function fetchAPI() {
     fetch('https://us-central1-intelligentmobilesystemsteam5.cloudfunctions.net/v1/map/currentMap')
       .then((response) => response.json())
@@ -48,18 +51,21 @@ export default function MowerMap() {
         let pointsArray = []
         let colsArray = []
 
+        //Add all pathpoints to an array
         if(json.pathPoints != undefined) {
           json.pathPoints.forEach(pathPoint => {
             console.log(pathPoint)
             pointsArray.push(`${translateX(pathPoint['x'])},${translateY(pathPoint['y'])}`);
           });
-        } 
+        }
+        //Add all collision avoidance events to an array
         if(json.collisionEvents != undefined) {
           json.collisionEvents.forEach(collision => {
             colsArray.push(`${translateX(collision['x'])},${translateY(value['y'])},${collision['col']}`);
           });
         }
 
+        //Update the state with the new arrays
         setCols(colsArray)
         setPoints(pointsArray);
       })

@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View, Dimensions } from "react-native";
 import colors from '../../constants/colors';
 
-
+//Styles for the largebutton
 const styles = StyleSheet.create({
   button: {
     width: Dimensions.get('window').width * 0.40,

@@ -3,8 +3,7 @@ import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-nati
 import colors from '../../constants/colors';
 import { Ionicons } from '@expo/vector-icons'
 
-import COLORS from "../../constants/colors";
-
+//Styles for roundbutton
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width * 0.27,
@@ -51,8 +50,8 @@ export default function RoundButton({
     <View style={[styles.container, style]}>
       <View style={styles.textCenter}>
         {disabled ? (
-          <View style={[styles.button, { backgroundColor: COLORS.GRAY}]}>
-            <Ionicons name={icon} size={Dimensions.get('window').width * 0.23 * 0.65} color={COLORS.SNOW}/>
+          <View style={[styles.button, { backgroundColor: colors.GRAY}]}>
+            <Ionicons name={icon} size={Dimensions.get('window').width * 0.23 * 0.65} color={colors.SNOW}/>
           </View>
         ) : (
           <TouchableOpacity  onPressIn={onPress} onPressOut={onRelease}>
