@@ -7,7 +7,6 @@ const AppContext = createContext({
   setPort: () => {},
 });
 
-
 const useAppContext = () => useContext(AppContext);
 
 export {

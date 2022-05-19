@@ -82,10 +82,11 @@ export default function Controller({ navigation }) {
   const [splash, setSplash] = useState(false);
   const [automaticMode, setAutomaticMode] = useState(true);
   const [loadingText, setLoadingText] = useState('Connecting to mower')
-  const { request } = useApi();
   const [speed, setSpeed] = useState(5);
   const [connectionFailed, setConnectionFailed] = useState(false);
-
+  
+  const { request } = useApi();
+  
   useFocusEffect(() => {
     const delay = 5000; //Interval of 5 seconds
     const interval = setInterval(async () => {

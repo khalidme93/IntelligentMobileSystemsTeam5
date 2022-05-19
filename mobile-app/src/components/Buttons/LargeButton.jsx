@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 export default function LargeButton({title, color, onPress = () => null}) {
   let textColor = colors.SNOW;
   if(color === colors.SNOW) {

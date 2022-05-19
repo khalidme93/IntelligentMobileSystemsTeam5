@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import Svg, { Polyline, Circle } from 'react-native-svg'
+import Svg, { Polyline, Circle } from 'react-native-svg';
 
 export default function MowerMap() {
   const [points, setPoints] = useState(null);

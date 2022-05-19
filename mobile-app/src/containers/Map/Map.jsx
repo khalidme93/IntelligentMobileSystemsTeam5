@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
 });
 
 export default function Map({ navigation }) {
-
   return (
     <Layout>
       <View style={styles.container}>

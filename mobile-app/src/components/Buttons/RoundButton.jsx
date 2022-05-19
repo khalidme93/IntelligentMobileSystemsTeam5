@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 import colors from '../../constants/colors';
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons';
 
 //Styles for roundbutton
 const styles = StyleSheet.create({
