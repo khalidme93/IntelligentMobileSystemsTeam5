@@ -4,37 +4,13 @@
 const functions = require("firebase-functions");
 const firebase = require("firebase-admin");
 const firebaseService = require("./permissions.json");
-const firebaseConfig = require("./real-time-db.js");
-const storageBucket = "intelligentmobilesystemsteam5.appspot.com";
-
-const getFunction = function(query) {
-  return new Promise( (resolve, reject) => {
-    try {
-      resolve(query.get());
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-const addFunction = function(query, data) {
-  return new Promise( (resolve, reject) => {
-    try {
-      resolve(query.add(data));
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 
 const vision = require("@google-cloud/vision");
-
 
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseService),
   storageBucket: "intelligentmobilesystemsteam5.appspot.com",
 });
-
 
 const bucket = firebase.storage().bucket();
 
@@ -55,6 +31,31 @@ const cors = require("cors");
 const {json} = require("body-parser");
 app.use(cors({origin: true}));
 
+// ----------------Helper functions--------------------
+
+// Returns promises for get functions
+const getFunction = function(query) {
+  return new Promise( (resolve, reject) => {
+    try {
+      resolve(query.get());
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Return promises for add functions
+const setFunction = function(query, data) {
+  return new Promise( (resolve, reject) => {
+    try {
+      resolve(query.set(data));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Function to do image classification given the url and update the collisionEvent with the labels
 async function imageClassification(destFileName) {
   const client = new vision.ImageAnnotatorClient({
     keyFilename: "./permissions.json",
@@ -66,8 +67,7 @@ async function imageClassification(destFileName) {
   return imageDescriptions;
 }
 
-
-// Function to do image classification given the url and update the collisionEvent with the labels
+// Downloads a image from the storage to local folder (/images)
 async function downloadImage() {
   const fileName = "images/uSonicPic.png";
 
@@ -79,12 +79,14 @@ async function downloadImage() {
     const image = await Jimp.read("./images/uSonicPic.png");
     await image.rotate(180);
     await image.resize(250, 250);
-    await image.writeAsync("./images/collisionObject.png");
+    const one = await image.writeAsync("./images/collisionObject.png");
+    console.log("1", one);
   }).catch((err)=>{
     console.log("err", err);
   });
 }
 
+// Uploads a image to the storage
 async function uploadImage() {
   const filePath = "./images/collisionObject.png";
 
@@ -95,8 +97,9 @@ async function uploadImage() {
   });
 }
 
+// Gets an url from the image in the storage
 async function getImageUrl() {
-  const fileName = "images/collisionObject.png";
+  const fileName = "images/uSonicPic.png";
   const fileName2 = "cat.jpg";
 
   const options = {
@@ -108,215 +111,9 @@ async function getImageUrl() {
   return url;
 }
 
-app.post("/map/currentMap/borderPoint", (req, res)=>{
-  db.collection("maps").doc("currentMap").collection("borderPoint").add({
-    "id": req.body.id,
-    "x": req.body.x,
-    "y": req.body.y,
-  }).then(() => {
-    return res.status(201).send("Document successfully written!");
-  }).catch((err) => {
-    return res.status(500).send("Error writing document: ", err);
-  });
-});
+// ----------------Map Routes--------------------
 
-app.get("/map/currentMap/borderPoint", (req, res)=>{
-  const collisionEvents = [];
-  db.collection("maps").doc("currentMap").collection("borderPoint").get().then((querySnapshot) => {
-    querySnapshot.forEach((documentSnapshot) => {
-      const id = documentSnapshot.get("id");
-      const x = documentSnapshot.get("x");
-      const y = documentSnapshot.get("y");
-      collisionEvents.push({id: id, x: x, y: y});
-    });
-    return res.status(200).send(collisionEvents);
-  })
-      .catch((error) => {
-        return res.status(500).send("Error reading document: ", error);
-      });
-});
-
-
-app.post("/map/currentMap/collisionEvent", async (req, res)=>{
-  try {
-    await downloadImage();
-    await uploadImage();
-    // Retrieve latest image from the storage
-    const imageUrl = await getImageUrl();
-
-    // Send image url to the image classification function and retrieve the labels
-    const imageDescriptions = await imageClassification(imageUrl[0]);
-
-    await addFunction(db.collection("maps").doc("currentMap").collection("collisionEvent"), {
-      "id": req.body.id,
-      "imageDescriptions": imageDescriptions,
-      "imagePath": imageUrl[0],
-      "x": req.body.x,
-      "y": req.body.y,
-      "time": req.body.time,
-    });
-    return res.status(201).send("Document successfully written!");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
-});
-
-// Retrieves all collisionEvents of a Map Object
-app.get("/map/currentMap/collisionEvent", (req, res)=>{
-  const collisionEvents = [];
-  db.collection("maps").doc("currentMap").collection("collisionEvent").get().then((querySnapshot) => {
-    querySnapshot.forEach((documentSnapshot) => {
-      const id = documentSnapshot.get("id");
-      const imageDescriptions = documentSnapshot.get("imageDescriptions");
-      const imagePath = documentSnapshot.get("imagePath");
-      const time = documentSnapshot.get("time");
-      const x = documentSnapshot.get("x");
-      const y = documentSnapshot.get("y");
-      collisionEvents.push({id: id, imageDescriptions: imageDescriptions, imagePath: imagePath, time: time, x: x, y: y});
-    });
-    return res.status(200).send(collisionEvents);
-  })
-      .catch((error) => {
-        return res.status(500).send("Error reading document: ", error);
-      });
-});
-
-// Updates the currentLocation of the Mower
-app.put("/map/currentMap/currentLocation", (req, res)=>{
-  const currentLocation = {
-    "id": req.body.id,
-    "x": req.body.x,
-    "y": req.body.y,
-    "time": req.body.time,
-  };
-  db.collection("maps").doc("currentMap").update({
-    currentLocation,
-  }).then(() => {
-    return res.status(201).send("Document successfully written!");
-  }).catch((err) => {
-    return res.status(500).send("Error writing document: ", err);
-  });
-});
-
-// Retrieves the currentLocation of the Mower
-app.get("/map/currentMap/currentLocation", (req, res)=>{
-  db.collection("maps").doc("currentMap").get().then((querySnapshot) => {
-    const currentLocation = querySnapshot.get("currentLocation");
-    return res.status(200).send(currentLocation);
-  }).catch((error) => {
-    return res.status(500).send("Error reading document: ", error);
-  });
-});
-
-
-app.get("/backendAPI", (req, res) => {
-  return res.status(200).send("hello bitches ");
-});
-
-
-app.post("/map/currentMap/pathPoints", (req, res)=>{
-  const time = req.body.time;
-  const x = req.body.x;
-  const y = req.body.y;
-  console.log(time, x, y);
-  db.collection("maps").doc("currentMap").collection("pathPoints").doc().set({
-    time: time,
-    x: x,
-    y: y,
-  })
-      .then(() => {
-        return res.status(200).send("Document successfully written!");
-      })
-      .catch((error) => {
-        return res.status(200).send("Error writing document: ", error);
-      });
-});
-
-
-/* app.post("/addPathPoints", (req, res)=>{
-  const time = req.body.time;
-  const x = req.body.x;
-  const y = req.body.y;
-  db.collection("mowers").doc("mower").get().then((documentSnapshot)=>{
-    const isOnline = documentSnapshot.get("isOnline");
-    console.log(isOnline);
-    if (isOnline != true) {
-      db.collection("maps").add({
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).then(()=>{
-        db.collection("mowers").doc("mower").update({
-          isOnline: true,
-        });
-      }).then(() => {
-        return res.status(200).send("Document successfully written!");
-      })
-          .catch((error) => {
-            return res.status(200).send("Error writing document: ", error);
-          });
-    } else {
-      let mapId;
-      db.collection("maps").orderBy("createdAt", "desc").limit(1).get().then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          mapId = documentSnapshot.id;
-        });
-        return mapId;
-      }).then(()=>{
-        db.collection("maps").doc(mapId).collection("pathPoints").doc().set({
-          time: time,
-          x: x,
-          y: y,
-        })
-            .then(() => {
-              return res.status(200).send("Document successfully written!");
-            })
-            .catch((error) => {
-              return res.status(200).send("Error writing document: ", error);
-            });
-      });
-    }
-  });
-});*/
-
-/*
-  db.collection("maps").add({
-    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  }).then((docRef)=>{
-    const mapId = docRef.id;
-    const time = req.body.time;
-    const x = req.body.x;
-    const y = req.body.y;
-    console.log(time, x, y);
-    db.collection("maps").doc(mapId).collection("pathPoints").doc().set({
-      time: time,
-      x: x,
-      y: y,
-    })
-        .then(() => {
-          return res.status(200).send("Document successfully written!");
-        })
-        .catch((error) => {
-          return res.status(200).send("Error writing document: ", error);
-        });
-  });
-} );*/
-
-app.get("/map/currentMap/pathPoints", (req, res) => {
-  const points = [];
-  db.collection("maps").doc("currentMap").collection("pathPoints").orderBy("time").limitToLast(500).get().then((querySnapshot) => {
-    querySnapshot.forEach((documentSnapshot) => {
-      const x = documentSnapshot.get("x");
-      const y = documentSnapshot.get("y");
-      points.push({x: x, y: y});
-    });
-    return res.status(200).send(points);
-  })
-      .catch((error) => {
-        return res.status(200).send("Error reading document: ", error);
-      });
-});
-
-
+// Creates a map object that overrides latest/current map data
 app.post("/map", (req, res) => {
   db.collection("maps").doc("currentMap").collection("pathPoints").get().then((querySnapshot)=>{
     querySnapshot.docs.forEach((snapShot)=>{
@@ -332,7 +129,7 @@ app.post("/map", (req, res) => {
   });
 });
 
-// Retrieves the latest map object
+// Retrieves the latest/current Map Object
 app.get("/map/currentMap", async (req, res)=>{
   const collisionEvent = [];
   const pathPoints = [];
@@ -364,8 +161,144 @@ app.get("/map/currentMap", async (req, res)=>{
   return res.status(200).json({collisionEvent: collisionEvent, pathPoints: pathPoints});
 });
 
+// Adds a new pathPoint to a Map object
+app.post("/map/currentMap/pathPoint", (req, res)=>{
+  const time = req.body.time;
+  const x = req.body.x;
+  const y = req.body.y;
+  console.log(time, x, y);
+  db.collection("maps").doc("currentMap").collection("pathPoints").doc().set({
+    time: time,
+    x: x,
+    y: y,
+  })
+      .then(() => {
+        return res.status(200).send("Document successfully written!");
+      })
+      .catch((error) => {
+        return res.status(200).send("Error writing document: ", error);
+      });
+});
 
-// ---------------Mower---------------
+// Retrieves all pathPoint of a Map Object
+app.get("/map/currentMap/pathPoint", (req, res) => {
+  const points = [];
+  db.collection("maps").doc("currentMap").collection("pathPoints").orderBy("time").limitToLast(500).get().then((querySnapshot) => {
+    querySnapshot.forEach((documentSnapshot) => {
+      const x = documentSnapshot.get("x");
+      const y = documentSnapshot.get("y");
+      points.push({x: x, y: y});
+    });
+    return res.status(200).send(points);
+  })
+      .catch((error) => {
+        return res.status(200).send("Error reading document: ", error);
+      });
+});
+
+// Adds a new borderPoint to a Map object
+app.post("/map/currentMap/borderPoint", (req, res)=>{
+  const docRef = db.collection("maps").doc("currentMap").collection("borderPoint").doc();
+  docRef.set({
+    "id": docRef.id,
+    "x": req.body.x,
+    "y": req.body.y,
+  }).then(() => {
+    return res.status(201).send("Document successfully written!");
+  }).catch((err) => {
+    return res.status(500).send("Error writing document: ", err);
+  });
+});
+
+// Retrieves all borderPoint of a Map Object
+app.get("/map/currentMap/borderPoint", (req, res)=>{
+  const collisionEvents = [];
+  db.collection("maps").doc("currentMap").collection("borderPoint").get().then((querySnapshot) => {
+    querySnapshot.forEach((documentSnapshot) => {
+      const id = documentSnapshot.get("id");
+      const x = documentSnapshot.get("x");
+      const y = documentSnapshot.get("y");
+      collisionEvents.push({id: id, x: x, y: y});
+    });
+    return res.status(200).send(collisionEvents);
+  })
+      .catch((error) => {
+        return res.status(500).send("Error reading document: ", error);
+      });
+});
+
+// Adds a new collisionEvent to a Map object
+app.post("/map/currentMap/collisionEvent", async (req, res)=>{
+  try {
+    // Retrieve latest image from the storage
+    await getImageUrl().then(async (imageUrl)=>{
+      // Send image url to the image classification function and retrieve the labels
+      const imageDescriptions = await imageClassification(imageUrl[0]);
+      const docRef = db.collection("maps").doc("currentMap").collection("collisionEvent").doc();
+      await setFunction( docRef, {
+        "id": docRef.id,
+        "imageDescriptions": imageDescriptions,
+        "imagePath": imageUrl[0],
+        "x": req.body.x,
+        "y": req.body.y,
+        "time": req.body.time,
+      });
+      return res.status(201).send("Document successfully written!");
+    }).catch((err)=>{
+      res.status(500).send(err);
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Retrieves all collisionEvents of a Map Object
+app.get("/map/currentMap/collisionEvent", (req, res)=>{
+  const collisionEvents = [];
+  db.collection("maps").doc("currentMap").collection("collisionEvent").get().then((querySnapshot) => {
+    querySnapshot.forEach((documentSnapshot) => {
+      const id = documentSnapshot.get("id");
+      const imageDescriptions = documentSnapshot.get("imageDescriptions");
+      const imagePath = documentSnapshot.get("imagePath");
+      const time = documentSnapshot.get("time");
+      const x = documentSnapshot.get("x");
+      const y = documentSnapshot.get("y");
+      collisionEvents.push({id: id, imageDescriptions: imageDescriptions, imagePath: imagePath, time: time, x: x, y: y});
+    });
+    return res.status(200).send(collisionEvents);
+  })
+      .catch((error) => {
+        return res.status(500).send("Error reading document: ", error);
+      });
+});
+
+// Updates the currentLocation of the Mower
+app.put("/map/currentMap/currentLocation", (req, res)=>{
+  const currentLocation = {
+    "x": req.body.x,
+    "y": req.body.y,
+    "time": req.body.time,
+  };
+  db.collection("maps").doc("currentMap").update({
+    currentLocation,
+  }).then(() => {
+    return res.status(201).send("Document successfully written!");
+  }).catch((err) => {
+    return res.status(500).send("Error writing document: ", err);
+  });
+});
+
+// Retrieves the currentLocation of the Mower
+app.get("/map/currentMap/currentLocation", (req, res)=>{
+  db.collection("maps").doc("currentMap").get().then((querySnapshot) => {
+    const currentLocation = querySnapshot.get("currentLocation");
+    return res.status(200).send(currentLocation);
+  }).catch((error) => {
+    return res.status(500).send("Error reading document: ", error);
+  });
+});
+
+// ----------------Mower Routes--------------------
 
 // Retrieves a Mower Object
 app.get("/mowers/mower", (req, res)=>{
@@ -424,7 +357,6 @@ app.post("/startAutoDriving", (req, res) => {
     return res.status(200).send("Error writing document: ", error);
   });
 });
-
 
 app.get("/getMowerState", (req, res) => {
   const status = [];
