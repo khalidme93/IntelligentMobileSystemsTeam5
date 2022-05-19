@@ -56,7 +56,6 @@ export default function MowerMap() {
         console.error(error);
       });
   }
-  console.log(cols)
 
   return (
     <View>

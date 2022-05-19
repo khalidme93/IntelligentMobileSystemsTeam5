@@ -107,6 +107,7 @@ const LoadingScreen = ({ loading, loadingText, connectionFailed }) => {
       ).start();
     }
   }, [loading]);
+  
   return (
     <Animated.View style={[styles.containerWrapper, { opacity: opacityAnim, zIndex: zIndexAnim }]}>
       <KeyboardAvoidingView behavior="padding" enabled>
