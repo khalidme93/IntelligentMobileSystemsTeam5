@@ -28,7 +28,6 @@ app.use(
 );
 
 const cors = require("cors");
-const {json} = require("body-parser");
 app.use(cors({origin: true}));
 
 // ----------------Helper functions--------------------
@@ -44,7 +43,7 @@ const getFunction = function(query) {
   });
 };
 
-// Return promises for add functions
+// Return promises for set functions
 const setFunction = function(query, data) {
   return new Promise( (resolve, reject) => {
     try {
@@ -97,11 +96,9 @@ async function uploadImage() {
   });
 }
 
-// Gets an url from the image in the storage
+// Gets a signed url from the image in the storage
 async function getImageUrl() {
   const fileName = "images/uSonicPic.png";
-  const fileName2 = "cat.jpg";
-
   const options = {
     version: "v4",
     action: "read",
@@ -157,7 +154,6 @@ app.get("/map/currentMap", async (req, res)=>{
   });
 
 
-  console.log("here 22", collisionEvent, pathPoints);
   return res.status(200).json({collisionEvent: collisionEvent, pathPoints: pathPoints});
 });
 
@@ -166,7 +162,6 @@ app.post("/map/currentMap/pathPoint", (req, res)=>{
   const time = req.body.time;
   const x = req.body.x;
   const y = req.body.y;
-  console.log(time, x, y);
   db.collection("maps").doc("currentMap").collection("pathPoints").doc().set({
     time: time,
     x: x,
@@ -212,15 +207,15 @@ app.post("/map/currentMap/borderPoint", (req, res)=>{
 
 // Retrieves all borderPoint of a Map Object
 app.get("/map/currentMap/borderPoint", (req, res)=>{
-  const collisionEvents = [];
+  const borderPoints = [];
   db.collection("maps").doc("currentMap").collection("borderPoint").get().then((querySnapshot) => {
     querySnapshot.forEach((documentSnapshot) => {
       const id = documentSnapshot.get("id");
       const x = documentSnapshot.get("x");
       const y = documentSnapshot.get("y");
-      collisionEvents.push({id: id, x: x, y: y});
+      borderPoints.push({id: id, x: x, y: y});
     });
-    return res.status(200).send(collisionEvents);
+    return res.status(200).send(borderPoints);
   })
       .catch((error) => {
         return res.status(500).send("Error reading document: ", error);
@@ -345,50 +340,4 @@ app.put("/mowers/mower/editAutoDrive", (req, res)=>{
     return res.status(500).send("Error reading document: ", error);
   });
 });
-
-app.post("/startAutoDriving", (req, res) => {
-  const isManual = req.body.isManual;
-
-  db.collection("mower").doc("mower").update({
-    isManual: isManual,
-  }).then(() => {
-    return res.status(201).send("Document successfully written!");
-  }).catch((error) => {
-    return res.status(200).send("Error writing document: ", error);
-  });
-});
-
-app.get("/getMowerState", (req, res) => {
-  const status = [];
-  db.collection("mowers").doc("mower").get().then((querySnapshot) => {
-    const isManual = querySnapshot.get("isManual");
-    const isOnline = querySnapshot.get("isOnline");
-    const currentMapId = querySnapshot.get("currentMapId");
-    const mowerName = querySnapshot.get("mowerName");
-    status.push({isManual: isManual, isOnline: isOnline, currentMapId: currentMapId, mowerName: mowerName});
-  }).then(() => {
-    return res.status(200).send("Document successfully written!", status);
-  }).catch((error) => {
-    return res.status(500).send("Error writing document: ", error);
-  });
-});
-
-app.post("/addMowerStatus", (req, res) => {
-  const isManual = req.body.isManual;
-  const isOnline = req.body.isOnline;
-  const mowerName = req.body.mowerName;
-  const currentMapId = req.body.currentMapId;
-  console.log(isManual, isOnline, mowerName, currentMapId);
-  db.collection("mowers").doc("mower").update({
-    isManual: isManual,
-    isOnline: isOnline,
-    mowerName: mowerName,
-    currentMapId: currentMapId,
-  }).then(() => {
-    return res.status(200).send("Document successfully written!");
-  }).catch((error) => {
-    return res.status(500).send("Error writing document: ", error);
-  });
-});
-
 exports.v1 = functions.https.onRequest(app);
