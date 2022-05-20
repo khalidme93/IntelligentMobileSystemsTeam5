@@ -1,0 +1,80 @@
+Victor Svanqvist
+Logbook:
+
+V.13:
+After the first lecture we all meet up up in a group room to discuss what 
+our vision was with the project. We had som different opinios but we came 
+to a conclussion that everybody was happy with at the end.
+We also devided the group into three subgroups; The mobile teamn(where i worked), 
+the hardware team and the backend group. We also decided that it would be best if
+we had two weekly meeings, one on tuesdays and one on thursdays to check if teams
+were up to pace.
+
+Later that week on the friday we had our first meeting were we discuss what 
+framwork we where going to use. We leaned quite a lot against android since 
+all group members had androids and me who had an iphone could just use the 
+emulator online. We the realized that if we just used a cross platform 
+framework (react native) it would be much better and everyone could test the application 
+without the infamous android studio lag. We all also had experience in 
+javascript and both my teammembers had worked in react in previous projects 
+so they could help me out if needed.
+
+V: 14
+On the tesday meetig we had some questions about the API and we had some back
+and forth questions about if we were to use bluetooth or network connection(socket connection)
+to the robot when controlling it in the autonamuos mode.
+We never came to a clear conclusion
+but we said we would figure it out later.
+
+Later that week Hugo finished the "sketches" for the app wich looked fantastic and we
+finally got access to the github so we could set up our workplace. We decided to go
+for react native expo because then we did not have to have 2 seperate apps for android
+and IOS.
+
+Last thing we did that week was to have a meeting with the entire group to check how things
+were going and that everyone was up to speed. We also decided that me and Hugo were going to
+study and get more comfortable with react native.
+
+V.15
+Everyone from the app team attended the tuesday meeting, not everyone from the other teams could
+make it but it did bot affect the meeting in any meaningful way.In the meeting we discussed our
+progress from the previous week and what the plan was going forward.
+
+On wednessday we worked on some components for the app and i really got to work with react native.
+I think it went very well and everything worked how it was suppost to.
+
+Thursday i was unfortunantly sick but i started working on a map for the application that would
+become my responsibilty for the rest of the project.
+
+V.16
+
+On the tuesday meeting we had a quite long discussion about how we where going to communicate
+between the groups to not cause any hiccups in the project. It was then descided that all members
+of the group should meet from 1-4/5 every tuesday in a designated classroom and hold a meeting
+sometime in that timeframe.
+
+The thursday worksession and meeting went well, everyone attended for almost the entire session
+but we got news from husqvarna that we were supposed to communicate with the robot directly
+which contradicted the previous information we had gotten. We had heard so much bad stuff about
+bluetooths integration with rasberry pie so we decided to go for a LAN controlled robot.
+
+Friday we set up functions in order to send request to the robot in order to start autonimous
+mode and move left right forward and backwards.
+
+V. 17
+At the beggining of week 17 we had a dilema, the hardware team had been working on a sophisticated
+coordinate system that was realisticly not going to be ready at the end of the project.
+We had to take an excecutive decicion and shelf that idea and implement something simpler.
+
+On thursday Hugo Martinsson helped out the hardware team by building an API that could take
+requests from our app and it worked perfectly. Now it was just time for the hardware team to
+link it up to the right components and we should have a manualy controlled robot.
+
+V.18
+We put some final touches on the map like adding collission points, changing up some color up.
+
+
+
+
+
+
