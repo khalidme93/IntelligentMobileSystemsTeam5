@@ -4,46 +4,24 @@
 #include <MeAuriga.h>
 #include <Time.h>
 #include <Math.h>
-#include <DeadReckoner.h>
 
 MeRGBLed rgbled_0(0, 12);
 MeEncoderOnBoard Encoder_1(SLOT1);
 MeEncoderOnBoard Encoder_2(SLOT2);
-MeEncoderOnBoard getCurPos();
 MeLineFollower linefollower_9(9);
 MeUltrasonicSensor ultrasonic_10(10);
 MeLightSensor lightsensor_12(12);
+MeGyro gyro_0(0, 0x69);
 
-//Measurments for robot
-#define RADIUS 20 // Wheel radius in mm
-#define LENGTH 140 // Wheel base in mm
-#define TICKS_PER_REV 360 //Tick interval for one wheel rotation
+//x value from gyroscope
+double curX;
 
-// Time intervals
-#define POSITION_COMPUTE_INTERVAL 500 //millisec
-#define SEND_INTERVAL 1000 // millisec
-
-// num of left and right tick counts on encoder
-volatile unsigned int leftTicks, rightTicks;
-// Previous times for computing elapsed time
-unsigned long prevPositionComputeTime = 0, prevSendTime = 0;
-// Previous x and y coordinate
-double prevX = 0, prevY = 0;
-//Current x and y values from deadReckoner calculations
-double curX, curY;
-//Left and right angular velocities;
-double wl, wr;
-// Position angle in radians from x to center of robor
-double theta;
-// Global variables
 char direction;
 char speed;
 int motion;
 
-//DeadReckoner funktion for data points
-DeadReckoner deadReckoner (&leftTicks, &rightTicks, TICKS_PER_REV, RADIUS, LENGTH);
 
-//Delay funktion
+//Delay funk
 void _delay(float seconds)
 {
   if (seconds < 0.0)
@@ -54,24 +32,11 @@ void _delay(float seconds)
   while (millis() < endTime)
     _loop();
 }
-//Fetch and return encoder ticks for motor 1 with * -1 for direction correction.
-long getEncoder_1pulse() {
-  return -1 * Encoder_1.getPulsePos();
-}
-//Fetch and return encoder ticks for motor 2
-long getEncoder_2pulse() {
-  return Encoder_2.getPulsePos();
-}
-//overloading tick-counts
-long tickCount() {
-  leftTicks = getEncoder_1pulse();
-  rightTicks = getEncoder_2pulse();
 
-}
 //Setting movement speed based on incoming speed request
 int speedControl(char sped) {
   int num = 0;
-  //Serial.println(sped);
+
   if (sped == '0') {
     num = 0;
   }
@@ -102,7 +67,6 @@ int speedControl(char sped) {
   else if (sped == '9') {
     num = 255;
   }
-  //Serial.println(num);
   return num;
 }
 //Checking if ultrasonic is triggerd
@@ -159,11 +123,7 @@ modeStates moveState = noOperationDec;
 //handshake with RPI communication and input selection
 void decideMode() {
   while (Serial.available() == 0) {}
-
   char modeInput = Serial.read();
-  /*if (modeInput != 's') {
-    Serial.println(modeInput);
-    }*/
   if (modeInput == 's') {
     Serial.println("ok");
     Serial.println("direction");
@@ -217,19 +177,20 @@ void move(int direction, int speed) {
   Encoder_1.setTarPWM(leftSpeed);
   Encoder_2.setTarPWM(rightSpeed);
 }
-
 void setup() {
   rgbled_0.setpin(44);
   rgbled_0.fillPixelsBak(0, 2, 1);
+  //set PWM 8KHz
   TCCR1A = _BV(WGM10);
   TCCR1B = _BV(CS11) | _BV(WGM12);
   TCCR2A = _BV(WGM21) | _BV(WGM20);
   TCCR2B = _BV(CS21);
   attachInterrupt(Encoder_1.getIntNum(), isr_process_encoder1, RISING);
   attachInterrupt(Encoder_2.getIntNum(), isr_process_encoder2, RISING);
-  Serial.begin(9600);
-  decideMode();
+  Serial.begin(115200);
 
+  gyro_0.begin();
+  decideMode();
   int flag = 0;
 
   while (1) {
@@ -239,7 +200,6 @@ void setup() {
       moveState = readDirection;
       Serial.println("usonic");
       Serial.println("direction");
-      //flag = 1;
     }
     //movement program for linefollow trigger
     if (lineFollowCheck() == true && flag == 0 ) {
@@ -247,18 +207,15 @@ void setup() {
       moveState = readDirection;
       Serial.println("line");
       Serial.println("direction");
-      // flag = 1;
     }
     //Cases with movement programs for incoming direction requests
     switch (moveState) {
-
       case readDirection:
         if (Serial.available() > 0) {
           direction = Serial.read();
-
-          //Serial.println(direction);
-          if (direction == '9') {
+          if (direction == '0') {
             flag = 0;
+
           }
           else if (isDigit(direction)) {
             moveState = readSpeed;
@@ -280,23 +237,14 @@ void setup() {
             }
             //send coordinate points
             else if (direction == '5') {
-              curX = deadReckoner.getX();
-              curY = deadReckoner.getY();
-
-              /*additional datapoints for more accurate datapoints
-              wl = deadReckoner.getWl();
-              wr = deadReckoner.getWr();
-              theta = deadReckoner.getTheta();
-              Total distance traveld
-              double distance = sqrt(curX * curX + curY * curY);*/
-              
+              moveState = readDirection;
               Serial.println("coordinates");
               Serial.println(curX);
-              Serial.println(curY);
+              Serial.println("direction");
             }
           }
           else {
-            Serial.print(direction);
+            Serial.println("direction");
           }
         }
 
@@ -321,31 +269,15 @@ void setup() {
     _loop();
   }
 }
-
+//updating gyro readings, overloading gyro readings
 void _loop() {
 
-  //Time interval for calculations of position points
-  if (millis() - prevPositionComputeTime > POSITION_COMPUTE_INTERVAL) {
-    tickCount();
-    deadReckoner.computePosition();
-    prevPositionComputeTime = millis();
-  }
+  gyro_0.update();
 
-  /*Timed funktion to send coordinate points*/
-  
-  /*if (millis() - prevSendTime > SEND_INTERVAL) {
-    Fetch all calculated information
-
-     Serial.print("Theta :");
-      Serial.println(theta);
-      Serial.print("Distance :");
-      Serial.println(distance);
-
-    prevSendTime = millis();
-    Serial.println("direction");*/
-
+  curX = gyro_0.getAngle(1);
   Encoder_1.loop();
   Encoder_2.loop();
+
 }
 
 void loop() {
