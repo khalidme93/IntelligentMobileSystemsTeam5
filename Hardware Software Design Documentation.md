@@ -223,8 +223,8 @@ The RPI (Raspberry Pi 4) controls all movement and communication from backend, a
 
 ## Start script 
 
-In the begingn of the script is a delay so that the raspberry can conect to wifie befor stating the main program.
-
+The script starts with a delay, so that the mower can connect to wifi.
+After the delay, the script launches the main program on the Raspberry Pi.
 
 ```Shell script
 #!bin/sh
