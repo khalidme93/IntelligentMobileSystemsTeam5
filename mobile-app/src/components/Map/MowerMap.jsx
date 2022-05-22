@@ -15,15 +15,15 @@ export default function MowerMap() {
       return () => clearInterval(interval)
   }, []);
 
-  //Translate the coordinates from API so that we can draw them out on the canvas
+  //Translate the coordinates from API so that we can draw them out on the canvas. As well as scale them so they fit the size of the map nicely
   function translateX(x) {
-    const intX = parseInt(x);
-    return (250 + (intX));
+    const floatX = parseFloat(x);
+    return (250 + (floatX * 80));
   }
 
   function translateY(y) {
-    const intY = parseInt(y);
-    return (250 - (intY));
+    const floatY = parseFloat(y);
+    return (250 - (floatY * 80));
   }
 
   //Fetch map from the API

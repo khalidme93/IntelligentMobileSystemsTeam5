@@ -27,7 +27,7 @@ const fetchFonts = () => {
 
 export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [ip, setIp] = useState('192.168.137.70');
+  const [ip, setIp] = useState('192.168.150.228');
   const [port, setPort] = useState('5000');
 
   const value = useMemo(() => ({
