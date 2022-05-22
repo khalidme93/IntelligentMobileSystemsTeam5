@@ -36,7 +36,7 @@ void decideMode() {
 }
 ```
 
-The Arduino uses a state machine to switch between states containing movement, speed and move commands. Seen below the first state readDirection. Checking of a new command has been sent over serial. Expected valid inputs range from 1 to 5 in byte format. 1 – 4 corresponds to direction and 5 sends gyro information for coordinate calculations. If none of the previous mentioned inputs are given. The **direction** information is asked for again.
+The Arduino uses a state machine to switch between states containing movement, speed and move commands. Seen below the first state readDirection. Checking of a new command has been sent over serial. Expected valid inputs range from 0 to 5 in byte format. 0 is used for reseting linedetector and ultrasonic sensore acttivation, 1 – 4 corresponds to direction and 5 sends gyro information for coordinate calculations. If none of the previous mentioned inputs are given. The **direction** information is asked for again.
 
 Case **readSpeed** awaits the speed setting. Due to Serial communication constraints a value from 0 – 9 is expected. shown in an later part. When speed is set, the next state is set to run.
 
