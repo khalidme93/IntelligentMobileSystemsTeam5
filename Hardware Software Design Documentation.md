@@ -221,7 +221,23 @@ void loop() {
 
 The RPI (Raspberry Pi 4) controls all movement and communication from backend, application and Arduino.
 
-#### Communication Application and Backend
+## Start script 
+
+In the begingn of the script is a delay so that the raspberry can conect to wifie befor stating the main program.
+
+
+```Shell script
+#!bin/sh
+# launcher.sh
+
+/bin/sleep 30
+cd /
+cd home/mbot/Documents/start
+sudo -u mbot python  RPI_movefunk_Api.py &
+cd /
+
+```
+## Communication Application and Backend
 
 The RPI uses Wi-Fi and a local API to receive movement requests and return status of operations. This is done by running a separate thread able to run independently from the main program. Satisfying requirement 3.
 
