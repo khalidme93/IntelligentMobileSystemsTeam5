@@ -294,7 +294,7 @@ class Move(Resource):
     
         return {}, 200
     pass
-#Stopp mower with API
+#Stop mower with API
 class StopMoving(Resource):
     def post(self):
         ser.write(bytes(str(1)+"\n",'utf-8'))
